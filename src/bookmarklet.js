@@ -1,3 +1,1 @@
-(function(window) {
-  alert('bookmarklet code here');
-}(window))
+alert('bookmarklet code here');
