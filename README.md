@@ -5,6 +5,7 @@
 ## Your Todos
 
 - [ ] Clone or fork or [copy](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) this repo
+- [ ] Run `npm install` locally
 - [ ] Set `name` in `package.json` to something.
 - [ ] Write bookmarklet code in `src/bookmarklet.js`.
 - [ ] Write docs in `index.md`.
