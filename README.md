@@ -5,8 +5,9 @@
 ## Your Todos
 
 - [ ] Clone or fork or [copy](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) this repo
+- [ ] In your new repo, `rm -rf .git` then `git init` to get a fresh commit history
 - [ ] Run `npm install` locally
-- [ ] Set `name` in `package.json` to something.
+- [ ] Change `name` in `package.json`.
 - [ ] Write bookmarklet code in `src/bookmarklet.js`.
 - [ ] Write docs in `index.md`.
 - [ ] Deploy it ([see below](https://github.com/psalaets/eleventy-bookmarklet#deployment))
@@ -22,9 +23,13 @@
 
 ### GitHub Pages
 
-1. Rename github folder: `mv _.github .github`
-2. Commit changes
-3. Push changes to a GitHub repo
+1. Create a GitHub repo for your bookmarklet
+2. In your GitHub repo: Settings => Code and automation => Pages, then
+  - set Source: `Deploy from a branch`
+  - set Branch: `gh-pages` `/ (root)`
+3. Rename github folder: `mv _.github .github`
+4. Commit changes
+5. Push changes to the GitHub repo from step 1
 
 ### GitLab Pages
 
