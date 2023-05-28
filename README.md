@@ -4,13 +4,14 @@
 
 ## Your Todos
 
-- [ ] Clone or fork or [copy](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) this repo
-- [ ] In your new repo, `rm -rf .git` then `git init` to get a fresh commit history
-- [ ] Run `npm install` locally
-- [ ] Change `name` in `package.json`.
+- [ ] `git clone https://github.com/psalaets/eleventy-bookmarklet.git <dir>`
+- [ ] `cd <dir>`
+- [ ] (Optional) `rm -rf .git` then `git init` to get a fresh commit history
+- [ ] `npm install`
+- [ ] Change `name` in `package.json` to the bookmarklet's name.
 - [ ] Write bookmarklet code in `src/bookmarklet.js`.
 - [ ] Write docs in `index.md`.
-- [ ] Deploy it ([see below](https://github.com/psalaets/eleventy-bookmarklet#deployment))
+- [ ] [Deploy](https://github.com/psalaets/eleventy-bookmarklet#deployment)
 
 ## Available Scripts
 
