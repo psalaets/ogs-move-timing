@@ -2,8 +2,8 @@
 layout: layout.njk
 ---
 
-# {{title}}
+# {{package.name}}
 
 Write the docs here.
 
-Bookmarklet link: <a href="javascript:{{code}}">{{title}}</a>
+Bookmarklet link: <a href="javascript:{{code}}">{{package.name}}</a>
