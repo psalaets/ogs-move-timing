@@ -8,17 +8,25 @@
 - [ ] `cd <dir>`
 - [ ] (Optional) `rm -rf .git` then `git init` to get a fresh commit history
 - [ ] `npm install`
-- [ ] Change `name` in `package.json` to the bookmarklet's name.
+- [ ] Set `name` in `package.json` to the bookmarklet's name.
+- [ ] Write something for `description` in `package.json`.
 - [ ] Write bookmarklet code in `src/bookmarklet.js`.
 - [ ] Write docs in `index.md`.
 - [ ] [Deploy](https://github.com/psalaets/eleventy-bookmarklet#deployment)
 
-## Available Scripts
+## Scripts
 
 - `npm run serve` - Run server with file watching and auto refresh
 - `npm run build` - Generic build
 - `npm run build:github-pages` - Build for GitHub pages
 - `npm run build:gitlab-pages` - Build for GitLab pages
+
+## Available 11ty data
+
+For use in templates.
+
+- `code` - Minified bookmarklet code.
+- `package` - The JSON parsed contents of the `package.json` file.
 
 ## Deployment
 
