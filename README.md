@@ -26,7 +26,7 @@
 For use in templates.
 
 - `code` - Minified bookmarklet code.
-- `package` - The JSON parsed contents of the `package.json` file.
+- `package` - The JSON-parsed contents of the `package.json` file.
 
 ## Deployment
 
