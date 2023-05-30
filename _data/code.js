@@ -17,6 +17,7 @@ module.exports = async function bundleCode() {
 
     console.log();
     console.log(`${code.length} characters:`);
+    console.log();
     console.log(code);
 
     return code;
