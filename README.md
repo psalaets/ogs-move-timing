@@ -35,7 +35,7 @@
 
 ### Option 1: No versioning
 
-Edit `src/bookmarklet.js` and the code will be available in `code.latest`.
+Edit `src/bookmarklet.js` and the code will be available in [`code.latest`](https://github.com/psalaets/eleventy-bookmarklet#code).
 
 ### Option 2: Cut releases
 
