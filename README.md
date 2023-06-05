@@ -17,7 +17,7 @@
 
 ## Scripts
 
-### Development
+### Develop
 
 - `npm run serve` - Run server with file watching and auto refresh
 
@@ -26,7 +26,7 @@
 - `npm run create-release` - Create a release from the current state of `src/bookmarklet.js`
 - `npm run finalize-release` - Finish building and publishing a release.
 
-### Deployment
+### Deploy
 
 - `npm run build` - Generic build
 - `npm run build:github-pages` - Build for GitHub pages
