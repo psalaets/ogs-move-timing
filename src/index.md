@@ -13,9 +13,11 @@ Bookmarklet link: <a href="javascript:{{code.latest}}">{{pkg.name}}</a>
 {% for release in collections.releases | reverse %}
   ### v{{release.data.version}} {{"(current)" if loop.first else ""}}
 
-  - Date: {{release.date | yyyymmdd}}
-  - Bookmarklet Link: <a href="javascript:{{release.data.code}}">{{release.data.version}}</a>
-  - Release Notes: {{release.content | safe}}
+  Date: {{release.date | yyyymmdd}}
+
+  Bookmarklet Link: <a href="javascript:{{release.data.code}}">{{release.data.version}}</a>
+
+  Release Notes: {{release.content | safe}}
 {% else %}
   No releases yet.
 {% endfor %}

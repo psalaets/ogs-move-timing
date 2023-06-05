@@ -1,7 +1,7 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
-const { extractVersion, isCodeFile } = require('../lib/code-file');
-const { bundleBookmarklet } = require('../lib/bundle-code');
+const { extractVersion, isCodeFile } = require('../../lib/release-filename');
+const { bundleBookmarklet } = require('../../lib/bundle-code');
 const semverCompare = require('semver-compare');
 
 /**
@@ -35,6 +35,8 @@ module.exports = async function code() {
 
   codeByVersion.snapshot = snapshotCode;
   codeByVersion.latest = latestCode;
+
+  console.log(codeByVersion);
 
   return codeByVersion;
 };
