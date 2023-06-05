@@ -36,8 +36,6 @@ module.exports = async function code() {
   codeByVersion.snapshot = snapshotCode;
   codeByVersion.latest = latestCode;
 
-  console.log(codeByVersion);
-
   return codeByVersion;
 };
 
