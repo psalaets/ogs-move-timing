@@ -10,6 +10,10 @@ Write the docs here.
 
 Bookmarklet link: <a href="javascript:{{code.latest}}">{{pkg.name}}</a>
 
+---
+
+Everything from here down is only relevant if the [release workflow](https://github.com/psalaets/eleventy-bookmarklet#option-2-releases).
+
 ## Releases
 
 {% for release in collections.releases | reverse %}
