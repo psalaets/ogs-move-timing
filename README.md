@@ -54,19 +54,27 @@ Read about the [data available to templates](#available-template-data) to publis
 
 ## Available template data
 
-For use in templates. This is in addition to the [data supplied by 11ty](https://www.11ty.dev/docs/data-eleventy-supplied/).
+This is available to templates in addition to the [data supplied by 11ty](https://www.11ty.dev/docs/data-eleventy-supplied/).
 
 ### `code`
 
-Object where
+An object where keys are version numbers of releases, and values are minified bookmarklet code.
 
-- keys are version numbers of releases
-- values are minified bookmarklet code
+It also contains 2 "alias" keys:
 
-Also contains 2 "alias" keys:
+- `snapshot` - Current code in `src/bookmarklet.js`, regardless of if it's been officially released.
+- `latest` - Code of the latest release or the same code as "snapshot" if there have not been any releases.
 
-1. snapshot - Current code in `src/bookmarklet.js`, regardless of if it's been officially released.
-2. latest - Code of the latest release or the same code as "snapshot" if there have not been any releases yet.
+Example:
+
+```js
+{
+  "1.0.0": "alert('old code')",
+  "2.0.0": "alert('new code')",
+  "latest": "alert('new code')",
+  "snapshot": "alert('current code')"
+}
+```
 
 ### `collections.releases`
 
@@ -76,7 +84,7 @@ In addition to [11ty provided properties](https://www.11ty.dev/docs/collections/
 
 - `data.code` - Minified code
 - `data.version` - Version number
-- `date` - Datetime when `npm run create-release` was run
+- `date` - Datetime of when `npm run create-release` was run
 - `content` - html generated from the markdown release notes
 
 See example usage in `src/index.md`.
