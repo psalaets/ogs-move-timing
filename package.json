@@ -1,7 +1,7 @@
 {
   "name": "eleventy-bookmarklet",
   "version": "0.9.0",
-  "description": "",
+  "description": "Short bookmarklet description here",
   "scripts": {
     "// ----- Development ----- ": "",
     "serve": "npx @11ty/eleventy --serve",
