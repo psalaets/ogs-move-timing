@@ -19,18 +19,18 @@
 
 ### Develop
 
-- `npm run serve` - Run server with file watching and auto refresh
+- `npm run serve` - Run local dev server with auto refresh
 
 ### Release
 
 - `npm run create-release` - Create a release from the current state of `src/bookmarklet.js`
-- `npm run finalize-release` - Finish building and publishing a release.
+- `npm run finalize-release` - Finish publishing a release.
 
 ### Deploy
 
-- `npm run build` - Generic build
-- `npm run build:github-pages` - Build for GitHub pages
-- `npm run build:gitlab-pages` - Build for GitLab pages
+- `npm run build` - Generic site build
+- `npm run build:github-pages` - Build site for GitHub pages
+- `npm run build:gitlab-pages` - Build site for GitLab pages
 
 ## Release workflows
 
@@ -84,7 +84,7 @@ In addition to [11ty provided properties](https://www.11ty.dev/docs/collections/
 
 - `data.code` - Minified code
 - `data.version` - Version number
-- `date` - Datetime of when `npm run create-release` was run
+- `date` - `Date` object of when `npm run create-release` was run
 - `content` - html generated from the markdown release notes
 
 See example usage in `src/index.md`.
@@ -103,7 +103,7 @@ This is an [11ty 2.0](https://www.11ty.dev/) website.
 1. Create a GitHub repo for the bookmarklet
 2. In the GitHub repo's web UI go to: Settings => Code and automation => Pages
   - set Source: `Deploy from a branch`
-  - set Branch: `gh-pages` `/ (root)`
+  - set Branch: `gh-pages`, then `/ (root)`
 3. Back on your local machine, rename github folder: `mv _.github .github`
 4. Commit changes
 5. Push changes to the GitHub repo
