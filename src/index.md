@@ -16,6 +16,8 @@ Everything from here down is only relevant if the [release workflow](https://git
 
 ## Releases
 
+Use the `releases` collection to create a changelog:
+
 {% for release in collections.releases | reverse %}
   ### v{{release.data.version}} {{"(current)" if loop.first else ""}}
 

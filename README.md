@@ -36,7 +36,11 @@
 
 ### Option 1: No versioning
 
-Edit `src/bookmarklet.js` and the code will be available to templates through [`code.latest`](#code).
+Edit `src/bookmarklet.js` and expose the bookmarklet with
+
+```html
+<a href="javascript:{{code.latest}}">{{pkg.name}}</a>
+```
 
 ### Option 2: Releases
 
@@ -46,7 +50,9 @@ When `src/bookmarklet.js` is in a state that's ready to release...
 2. Follow the prompts and instructions in the terminal
 3. `npm run finalize-release`
 
-## Available 11ty data
+Read about the [data available to templates](#available-template-data) to publish multiple versions of the bookmarklet.
+
+## Available template data
 
 For use in templates. This is in addition to the [data supplied by 11ty](https://www.11ty.dev/docs/data-eleventy-supplied/).
 
@@ -66,12 +72,12 @@ Also contains 2 "alias" keys:
 
 11ty collection of releases in ascending date order (newest release is last).
 
-Every release object has [11ty provided properties](https://www.11ty.dev/docs/collections/#collection-item-data-structure) as well as:
+In addition to [11ty provided properties](https://www.11ty.dev/docs/collections/#collection-item-data-structure), every release has:
 
 - `data.code` - Minified code
 - `data.version` - Version number
 - `date` - Datetime when `npm run create-release` was run
-- `content` - html from the markdown release notes
+- `content` - html generated from the markdown release notes
 
 See example usage in `src/index.md`.
 
@@ -86,13 +92,13 @@ This is an [11ty 2.0](https://www.11ty.dev/) website.
 
 ### GitHub Pages
 
-1. Create a GitHub repo for your bookmarklet
-2. In your GitHub repo: Settings => Code and automation => Pages, then
+1. Create a GitHub repo for the bookmarklet
+2. In the GitHub repo's web UI go to: Settings => Code and automation => Pages
   - set Source: `Deploy from a branch`
   - set Branch: `gh-pages` `/ (root)`
-3. Rename github folder: `mv _.github .github`
+3. Back on your local machine, rename github folder: `mv _.github .github`
 4. Commit changes
-5. Push changes to the GitHub repo from step 1
+5. Push changes to the GitHub repo
 
 ### GitLab Pages
 
