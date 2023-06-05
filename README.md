@@ -8,8 +8,9 @@
 - [ ] `cd <dir>`
 - [ ] (Optional) `rm -rf .git` then `git init` to get a fresh commit history
 - [ ] `npm install`
-- [ ] Set `name` in `package.json` to the bookmarklet's name.
-- [ ] Set `description` in `package.json`.
+- Edit `package.json`:
+  - [ ] Set `name` to the bookmarklet's name.
+  - [ ] Set `description`
 - [ ] Write bookmarklet code in `src/bookmarklet.js`.
 - [ ] Write docs in `src/index.md`.
 - [ ] [Deploy](https://github.com/psalaets/eleventy-bookmarklet#deployment)
