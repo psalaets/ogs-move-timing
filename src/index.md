@@ -11,7 +11,7 @@ Bookmarklet link: <a href="javascript:{{code.latest}}">{{pkg.name}}</a>
 ## Releases
 
 {% for release in collections.releases | reverse %}
-  ### {{release.data.version}} {{"(current)" if loop.first else ""}}
+  ### v{{release.data.version}} {{"(current)" if loop.first else ""}}
 
   - Date: {{release.date | yyyymmdd}}
   - Bookmarklet Link: <a href="javascript:{{release.data.code}}">{{release.data.version}}</a>

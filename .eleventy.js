@@ -6,6 +6,9 @@ module.exports = function(eleventyConfig) {
   });
 
   return {
+    dir: {
+      input: 'src',
+    },
     // .md files can use njk templating
     markdownTemplateEngine: 'njk'
   };

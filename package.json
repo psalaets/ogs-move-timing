@@ -3,10 +3,19 @@
   "version": "1.1.0",
   "description": "",
   "scripts": {
+    "// ----- Development ----- ": "",
     "serve": "npx @11ty/eleventy --serve",
+    "// ----- Release ----- ": "",
+    "precreate-release": "node ./scripts/ensure-code-builds.js",
+    "create-release": "plop release",
+    "postcreate-release": "node ./scripts/post-create-release.js",
+    "finalize-release": "npm version -m \"%s\" $(cat .bookmarklet-version)",
+    "version": "git add .",
+    "postversion": "git push && git push --tags",
+    "// ----- Deployment ----- ": "",
     "build": "npx @11ty/eleventy",
     "build:github-pages": "npx @11ty/eleventy",
-    "build:gitlab-pages": "npx @11ty/eleventy --input=. --output=public"
+    "build:gitlab-pages": "npx @11ty/eleventy --input=src --output=public"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +25,7 @@
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-terser": "^0.4.1",
     "np": "^8.0.2",
+    "plop": "^3.1.2",
     "rollup": "^3.21.7",
     "semver-compare": "^1.0.0"
   }

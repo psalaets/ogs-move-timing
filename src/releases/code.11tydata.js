@@ -1,6 +1,6 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
-const { toCodeFileName } = require('../lib/code-file');
+const { toCodeFileName } = require('../../lib/code-file');
 
 /**
  * This reads the version and adds the corresponding source code to the

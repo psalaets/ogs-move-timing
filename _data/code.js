@@ -1,7 +1,7 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const { extractVersion, isCodeFile } = require('../lib/code-file');
-const { bundleCode } = require('../lib/bundle-code');
+const { bundleBookmarklet } = require('../lib/bundle-code');
 const semverCompare = require('semver-compare');
 
 /**
@@ -24,7 +24,9 @@ module.exports = async function code() {
   }
 
   // Add aliases
-  const snapshotCode = await bundleCode(path.join(__dirname, '../src/bookmarklet.js'));
+  const snapshotCode = await bundleBookmarklet({
+    verbose: true,
+  });
 
   const versions = Object.keys(codeByVersion);
   const latestCode = versions.length > 0
