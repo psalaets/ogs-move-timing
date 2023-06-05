@@ -32,9 +32,9 @@
 - `npm run build:github-pages` - Build for GitHub pages
 - `npm run build:gitlab-pages` - Build for GitLab pages
 
-## Versioning
+## Release workflows
 
-### Option 1: No versioning
+### Option 1: No releases
 
 Edit `src/bookmarklet.js` and expose the bookmarklet with
 
@@ -44,7 +44,7 @@ Edit `src/bookmarklet.js` and expose the bookmarklet with
 
 ### Option 2: Releases
 
-When `src/bookmarklet.js` is in a state that's ready to release...
+When `src/bookmarklet.js` is in a state that's ready to release:
 
 1. `npm run create-release`
 2. Follow the prompts and instructions in the terminal
@@ -63,7 +63,7 @@ An object where keys are version numbers of releases, and values are minified bo
 It also contains 2 "alias" keys:
 
 - `snapshot` - Current code in `src/bookmarklet.js`, regardless of if it's been officially released.
-- `latest` - Code of the latest release or the same code as "snapshot" if there have not been any releases.
+- `latest` - Code of the latest release or the same code as `snapshot` if there have not been any releases.
 
 Example:
 

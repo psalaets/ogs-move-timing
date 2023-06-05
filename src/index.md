@@ -12,7 +12,7 @@ Bookmarklet link: <a href="javascript:{{code.latest}}">{{pkg.name}}</a>
 
 ---
 
-Everything from here down is only relevant if the [release workflow](https://github.com/psalaets/eleventy-bookmarklet#option-2-releases).
+Everything from here down is only relevant when using the [release workflow](https://github.com/psalaets/eleventy-bookmarklet#option-2-releases).
 
 ## Releases
 
