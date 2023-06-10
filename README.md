@@ -70,8 +70,8 @@ Example:
 ```js
 {
   "1.0.0": "alert('old code')",
-  "2.0.0": "alert('new code')",
-  "latest": "alert('new code')",
+  "2.0.0": "alert('newer code')",
+  "latest": "alert('newer code')",
   "snapshot": "alert('current code')"
 }
 ```
