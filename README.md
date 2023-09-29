@@ -100,13 +100,13 @@ This is an [11ty 2.0](https://www.11ty.dev/) website.
 
 ### GitHub Pages
 
-1. Create a GitHub repo for the bookmarklet
-2. In the GitHub repo's web UI go to: Settings => Code and automation => Pages
-  - set Source: `Deploy from a branch`
-  - set Branch: `gh-pages`, then `/ (root)`
-3. Back on your local machine, rename github folder: `mv _.github .github`
-4. Commit changes
-5. Push changes to the GitHub repo
+1. Create a GitHub repo for the bookmarklet and use the git CLI to set it up as a remote repo
+2. Rename github folder: `mv _.github .github`
+3. Commit and push to the new repo
+4. In the GitHub repo's web UI go to: Settings => Code and automation => Pages
+    - set Source: `Deploy from a branch`
+    - set Branch: `gh-pages`, then `/ (root)`
+    - Click Save button
 
 ### GitLab Pages
 
