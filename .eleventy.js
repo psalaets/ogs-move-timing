@@ -3,6 +3,8 @@ module.exports = function(eleventyConfig) {
     return dateObject.toISOString().slice(0, 'YYYY-MM-DD'.length);
   });
 
+  eleventyConfig.addWatchTarget('./src/**/*.js');
+
   return {
     dir: {
       input: 'src',
