@@ -8,7 +8,7 @@
 2. `cd <dir>`
 3. (Optional) `rm -rf .git` then `git init` to get a fresh commit history
 4. `npm install`
-5. Edit `package.json`:
+5. Edit `package.json`
     - Set `name` to the bookmarklet's name.
     - Set `description`
 6. Write bookmarklet code in `src/bookmarklet.js`.
@@ -60,7 +60,7 @@ This is available to templates in addition to the [data supplied by 11ty](https:
 
 An object where keys are version numbers of releases, and values are minified bookmarklet code.
 
-It also contains 2 "alias" keys:
+It also contains 2 special keys:
 
 - `snapshot` - Current code in `src/bookmarklet.js`, regardless of if it's been officially released.
 - `latest` - Code of the latest release or the same code as `snapshot` if there have not been any releases.
