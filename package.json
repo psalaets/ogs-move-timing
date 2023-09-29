@@ -4,7 +4,8 @@
   "description": "Short bookmarklet description here",
   "scripts": {
     "// ----- Development ----- ": "",
-    "serve": "npx @11ty/eleventy --serve",
+    "dev": "npx @11ty/eleventy --serve",
+    "serve": "npm run dev",
     "// ----- Release ----- ": "",
     "precreate-release": "node ./scripts/ensure-code-builds.js",
     "create-release": "plop release",

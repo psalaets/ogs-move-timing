@@ -9,8 +9,8 @@
 3. (Optional) `rm -rf .git` then `git init` to get a fresh commit history
 4. `npm install`
 5. Edit `package.json`:
-  - Set `name` to the bookmarklet's name.
-  - Set `description`
+    - Set `name` to the bookmarklet's name.
+    - Set `description`
 6. Write bookmarklet code in `src/bookmarklet.js`.
 7. Write docs in `src/index.md`.
 8. [Deploy](#deployment)
@@ -19,7 +19,7 @@
 
 ### Develop
 
-- `npm run serve` - Run local dev server with auto refresh
+- `npm run dev` - Run local dev server with auto refresh
 
 ### Release
 
