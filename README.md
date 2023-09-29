@@ -105,8 +105,7 @@ This is an [11ty 2.0](https://www.11ty.dev/) website.
 3. Commit and push to the new repo
 4. In the GitHub repo's web UI go to: Settings => Code and automation => Pages
     - set Source: `Deploy from a branch`
-    - set Branch: `gh-pages`, then `/ (root)`
-    - Click Save button
+    - set Branch: `gh-pages`, then `/ (root)`, then click Save button
 
 ### GitLab Pages
 
