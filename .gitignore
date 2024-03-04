@@ -4,3 +4,6 @@ public
 
 # Hack to make verison number available throughout the 2-step release process
 .bookmarklet-version
+
+# nix related
+.direnv
