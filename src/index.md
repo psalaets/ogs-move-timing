@@ -8,7 +8,7 @@ layout: layout.njk
 
 Write the docs here.
 
-Bookmarklet link: <a href="javascript:{{code.latest}}">{{pkg.name}}</a>
+Bookmarklet link: <a href="javascript:void {{code.latest}}">{{pkg.name}}</a>
 
 ---
 
