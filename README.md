@@ -39,7 +39,7 @@
 Edit `src/bookmarklet.js` and expose the bookmarklet with
 
 ```html
-<a href="javascript:{{code.latest}}">{{pkg.name}}</a>
+<a href="javascript:void {{code.latest}}">{{pkg.name}}</a>
 ```
 
 ### Option 2: Releases

@@ -23,7 +23,7 @@ Use the `releases` collection to create a changelog:
 
   Date: {{release.date | yyyymmdd}}
 
-  Bookmarklet Link: <a href="javascript:{{release.data.code}}">{{release.data.version}}</a>
+  Bookmarklet Link: <a href="javascript:void {{release.data.code}}">{{release.data.version}}</a>
 
   Release Notes: {{release.content | safe}}
 {% else %}
