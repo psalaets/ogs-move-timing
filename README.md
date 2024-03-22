@@ -27,7 +27,6 @@
 - `npm run build:github-pages` - Build site for GitHub pages
 - `npm run build:gitlab-pages` - Build site for GitLab pages
 
-
 ## Available template data
 
 This is available to templates in addition to the [data supplied by 11ty](https://www.11ty.dev/docs/data-eleventy-supplied/).

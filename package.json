@@ -1,6 +1,6 @@
 {
   "name": "eleventy-bookmarklet",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "Short bookmarklet description here",
   "scripts": {
     "dev": "npx @11ty/eleventy --serve",
@@ -16,5 +16,9 @@
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-terser": "^0.4.1",
     "rollup": "^3.21.7"
+  },
+  "eleventy-bookmarklet": {
+    "type": "lazy-load",
+    "host": "http://localhost:8080"
   }
 }

@@ -1,9 +1,9 @@
-module.exports = function(eleventyConfig) {
-  eleventyConfig.addFilter('yyyymmdd', (dateObject) => {
-    return dateObject.toISOString().slice(0, 'YYYY-MM-DD'.length);
-  });
+const { builder } = require('./lib/builder');
 
+module.exports = function(eleventyConfig) {
   eleventyConfig.addWatchTarget('./src/**/*.js');
+
+  builder.configure11ty(eleventyConfig);
 
   return {
     dir: {

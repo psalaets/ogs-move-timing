@@ -1,10 +1,8 @@
-const { bundleBookmarklet } = require('../../lib/bundle-code');
+const { builder } = require('../../lib/builder');
 
 /**
  * @returns {Promise<string>}
  */
-module.exports = async function code() {
-  return bundleBookmarklet({
-    verbose: true,
-  });
+module.exports = function code() {
+  return builder.bundleForUrl();
 };
