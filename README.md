@@ -19,7 +19,7 @@
 
 The config is in `package.json` at the `eleventy-bookmarklet` property.
 
-```json
+```js
 // package.json
 {
   //...
