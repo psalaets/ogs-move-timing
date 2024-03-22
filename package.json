@@ -3,17 +3,7 @@
   "version": "0.9.0",
   "description": "Short bookmarklet description here",
   "scripts": {
-    "// ----- Development ----- ": "",
     "dev": "npx @11ty/eleventy --serve",
-    "serve": "npm run dev",
-    "// ----- Release ----- ": "",
-    "precreate-release": "node ./scripts/ensure-code-builds.js",
-    "create-release": "plop release",
-    "postcreate-release": "node ./scripts/post-create-release.js",
-    "finalize-release": "npm version -m \"%s\" $(cat .bookmarklet-version)",
-    "version": "git add .",
-    "postversion": "git push && git push --tags",
-    "// ----- Deployment ----- ": "",
     "build": "npx @11ty/eleventy",
     "build:github-pages": "npx @11ty/eleventy",
     "build:gitlab-pages": "npx @11ty/eleventy --input=src --output=public"
@@ -25,9 +15,6 @@
     "@11ty/eleventy": "^2.0.1",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-terser": "^0.4.1",
-    "feed": "^4.2.2",
-    "plop": "^3.1.2",
-    "rollup": "^3.21.7",
-    "semver-compare": "^1.0.0"
+    "rollup": "^3.21.7"
   }
 }
