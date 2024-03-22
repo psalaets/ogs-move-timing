@@ -15,6 +15,32 @@
 7. Write docs in `src/index.md`.
 8. [Deploy](#deployment)
 
+## Config
+
+The config is in `package.json` at the `eleventy-bookmarklet` property.
+
+```json
+// package.json
+{
+  //...
+  "eleventy-bookmarklet": {
+    "type": "inline", // or "lazy-load"
+    "host": "https://username.github.io"
+  }
+}
+```
+
+### type
+
+- `inline` - All the bookmarklet code is inlined into a link. This runs instantly but users have to re-bookmark to get code updates.
+- `lazy-load` - The bookmarklet code is lazy-loaded when bookmarklet is run. This has a slight delay (have to download the script first) but users always get the latest version of the bookmarklet.
+
+### host
+
+Only required when type is `lazy-load`.
+
+The host to load the bookmarklet js from. This should include scheme, hostname, and port (if non-standard).
+
 ## Scripts
 
 ### Develop
