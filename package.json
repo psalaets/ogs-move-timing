@@ -19,6 +19,6 @@
   },
   "eleventy-bookmarklet": {
     "type": "inline",
-    "host": "http://localhost:8080"
+    "url": "http://localhost:8080"
   }
 }

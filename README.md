@@ -24,8 +24,8 @@ The config is in `package.json` at the `eleventy-bookmarklet` property.
 {
   //...
   "eleventy-bookmarklet": {
-    "type": "inline", // or "lazy-load"
-    "host": "https://username.github.io"
+    "type": "lazy-load", // or "inline"
+    "url": "https://username.github.io/my-bookmarklet"
   }
 }
 ```
@@ -33,13 +33,13 @@ The config is in `package.json` at the `eleventy-bookmarklet` property.
 ### type
 
 - `inline` - All the bookmarklet code is inlined into a link. This runs instantly but users have to re-bookmark to get code updates.
-- `lazy-load` - The bookmarklet code is lazy-loaded when bookmarklet is run. This has a slight delay (have to download the script first) but users always get the latest version of the bookmarklet.
+- `lazy-load` - The bookmarklet code is lazy-loaded when bookmarklet is run. This has a slight delay (while downloading the script) but users always get the latest version of the bookmarklet.
 
-### host
+### url
 
 Only required when type is `lazy-load`.
 
-The host to load the bookmarklet js from. This should include scheme, hostname, and port (if non-standard).
+The url where this eleventy site will be served at. The bookmarklet code is loaded from this.
 
 ## Scripts
 
