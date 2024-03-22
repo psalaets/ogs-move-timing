@@ -39,7 +39,7 @@ The config is in `package.json` at the `eleventy-bookmarklet` property.
 
 Only required when type is `lazy-load`.
 
-The url where this eleventy site will be served at. The bookmarklet code is loaded from this.
+The url where this eleventy site will be served at. The bookmarklet code is loaded from this location.
 
 ## Scripts
 
