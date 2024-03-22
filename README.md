@@ -32,7 +32,7 @@ The config is in `package.json` at the `eleventy-bookmarklet` property.
 
 ### type
 
-- `inline` - All the bookmarklet code is inlined into a link. This runs instantly but users have to re-bookmark to get code updates.
+- `inline` - All the bookmarklet code is inlined into a link. This runs instantly but users have to re-bookmark to get code updates. Probably has a [size limitation](https://stackoverflow.com/q/417142).
 - `lazy-load` - The bookmarklet code is lazy-loaded when bookmarklet is run. This has a slight delay (while downloading the script) but users always get the latest version of the bookmarklet.
 
 ### url
