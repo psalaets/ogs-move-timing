@@ -54,59 +54,36 @@ function getGame(gameId) {
   return fetch(gameUrl(gameId)).then(resp => resp.json());
 }
 
-/**
- * @callback ContainerCallback
- * @param {HTMLElement} container
- * @returns {void}
- */
+function createWidget(onHide) {
+  const widget = document.createElement('div');
+  widget.dataset.mtWidget = '';
+  widget.style.display = 'flex';
+  widget.style.flexDirection = 'column';
+  widget.style.minHeight = '10rem';
+  widget.style.padding = '1rem';
 
-/**
- * @param {Document} document
- * @param {ContainerCallback} cb
- */
-function withContainer(document, cb) {
-  /**
-   * @type {HTMLDivElement | null}
-   */
-  let container = document.querySelector('[data-mt-container]');
-  /**
-   * @type {HTMLDivElement | null}
-   */
-  let contentContainer = null;
+  const toolbar = document.createElement('div');
+  toolbar.style.display = 'flex';
+  toolbar.style.flex = '0 0 2rem';
+  toolbar.innerHTML = `<button id="mt-hide">Hide</button>`;
+  toolbar.addEventListener('click', event => {
+    if (event.target instanceof HTMLButtonElement && event.target.id === 'mt-hide') {
+      onHide && onHide();
+    }
+  });
 
-  if (!container) {
-    container = document.createElement('div');
-    container.dataset.mtContainer = '';
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-    container.style.minHeight = '10rem';
-    container.style.padding = '1rem';
+  const contentContainer = document.createElement('div');
+  contentContainer.style.flex = '1 1 100%';
+  contentContainer.dataset.mtContent = '';
+  // contentContainer.style.backgroundColor = 'blue';
 
-    const toolbar = document.createElement('div');
-    toolbar.style.display = 'flex';
-    toolbar.style.flex = '0 0 2rem';
-    toolbar.innerHTML = `<button id="mt-hide">Hide</button>`;
-    toolbar.addEventListener('click', event => {
-      if (event.target instanceof HTMLButtonElement && event.target.id === 'mt-hide') {
-        console.log('TODO hide chart');
-      }
-    });
+  widget.appendChild(toolbar);
+  widget.appendChild(contentContainer);
 
-    contentContainer = document.createElement('div');
-    contentContainer.style.flex = '1 1 100%';
-    contentContainer.dataset.mtContent = '';
-    // contentContainer.style.backgroundColor = 'blue';
-
-    container.appendChild(toolbar);
-    container.appendChild(contentContainer);
-
-    const actionBar = document.querySelector('.action-bar');
-    actionBar.parentElement.insertBefore(container, actionBar);
-  } else {
-    contentContainer = container.querySelector('[data-mt-content]');
-  }
-
-  cb(contentContainer);
+  return {
+    widget,
+    content: contentContainer
+  };
 }
 
 /**
@@ -130,70 +107,68 @@ function extractMoveTimes(game) {
   });
 }
 
-function renderLoadingSpinner() {
-  withContainer(document, container => {
-    const message = document.createElement('span');
-    message.textContent = 'Loading...';
-    container.replaceChildren(message);
-  });
+/**
+ * @param {HTMLElement} parent
+ */
+function renderLoadingSpinner(parent) {
+  parent.replaceChildren('Loading...');
 }
 
 /**
+ * @param {HTMLElement} parent
  * @param {Array<MoveTime>} moveTimes
  */
-function renderBars(moveTimes) {
-  // render move times
-  withContainer(document, container => {
-    const chart = document.createElement('div');
-    chart.style.display = 'flex';
-    // chart.style.gap = '1px';
-    chart.style.backgroundColor = 'lightgray';
-    chart.style.minHeight = '100%';
-    chart.style.overflowX = 'scroll';
-    chart.addEventListener('mouseover', event => {
-      if (event.target instanceof HTMLElement && event.target.matches('[data-mt-bar-wrapper]')) {
-        console.log('mouseover', event.target);
-      }
-    });
-
-    const maxMillis = Math.max(...moveTimes.map(mt => mt.millis));
-
-    moveTimes.forEach(mt => {
-      const bar = document.createElement('div');
-      const percent = mt.millis / maxMillis * 100;
-      bar.style.height = percent + '%';
-      bar.style.flex = '1 1 100%';
-      bar.style.backgroundColor = mt.color;
-
-      // full height wrapper around the bar
-      const barWrapper = document.createElement('div');
-      barWrapper.dataset = {
-        mtBarWrapper: '',
-        seconds: Number(mt.millis / 1000).toFixed(1),
-        move: mt.move
-      };
-      barWrapper.style.minHeight = '100%';
-      barWrapper.style.display = 'flex';
-      barWrapper.style.alignItems = 'flex-end';
-      barWrapper.style.flex = '1 0 3px';
-      barWrapper.appendChild(bar);
-
-      chart.appendChild(barWrapper);
-    });
-
-    container.replaceChildren(chart);
+function renderBars(parent, moveTimes) {
+  const chart = document.createElement('div');
+  chart.style.display = 'flex';
+  // chart.style.gap = '1px';
+  chart.style.backgroundColor = 'lightgray';
+  chart.style.minHeight = '100%';
+  chart.style.overflowX = 'scroll';
+  chart.addEventListener('mouseover', event => {
+    if (event.target instanceof HTMLElement && event.target.matches('[data-mt-bar-wrapper]')) {
+      console.log('mouseover', event.target);
+    }
   });
+
+  const maxMillis = Math.max(...moveTimes.map(mt => mt.millis));
+
+  moveTimes.forEach(mt => {
+    const bar = document.createElement('div');
+    const percent = mt.millis / maxMillis * 100;
+    bar.style.height = percent + '%';
+    bar.style.flex = '1 1 100%';
+    bar.style.backgroundColor = mt.color;
+
+    // full height wrapper around the bar
+    const barWrapper = document.createElement('div');
+    barWrapper.dataset = {
+      mtBarWrapper: '',
+      seconds: Number(mt.millis / 1000).toFixed(1),
+      move: mt.move
+    };
+    barWrapper.style.minHeight = '100%';
+    barWrapper.style.display = 'flex';
+    barWrapper.style.alignItems = 'flex-end';
+    barWrapper.style.flex = '1 0 3px';
+    barWrapper.appendChild(bar);
+
+    chart.appendChild(barWrapper);
+  });
+
+  parent.replaceChildren(chart);
 }
 
 try {
-  const gameId = determineGameId()
+  const gameId = determineGameId();
 
-  renderLoadingSpinner();
+  const { content, widget } = createWidget();
+  renderLoadingSpinner(content);
 
   getGame(gameId)
     .then(game => {
       const moveTimes = extractMoveTimes(game);
-      renderBars(moveTimes);
+      renderBars(content, moveTimes);
     })
     .catch(e => {
       console.error(e);
