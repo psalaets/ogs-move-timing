@@ -1,7 +1,7 @@
 {
-  "name": "eleventy-bookmarklet",
+  "name": "ogs-move-timing",
   "version": "2.0.0",
-  "description": "Short bookmarklet description here",
+  "description": "Visualize time spent per move in an OGS game",
   "scripts": {
     "dev": "npx @11ty/eleventy --serve",
     "build": "npx @11ty/eleventy",
@@ -19,6 +19,6 @@
   },
   "eleventy-bookmarklet": {
     "type": "lazy-load",
-    "url": "https://username.github.io/my-boomarklet"
+    "url": "https://psalaets.github.io/ogs-move-timing"
   }
 }
