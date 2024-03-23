@@ -21,13 +21,13 @@
  */
 
 /**
- * Figure out the current page's game id.
+ * Figure out game id from a url.
  *
  * @returns {string}
  */
-function determineGameId() {
+function determineGameId(url) {
   const pattern = /https:\/\/online-go\.com\/(game|review)\/(\d+)/;
-  const matchResult = pattern.exec(window.location);
+  const matchResult = pattern.exec(url);
   // Game id is in 2nd capture group
   const gameId = matchResult ? matchResult[2] : null;
 
@@ -54,14 +54,16 @@ function getGame(gameId) {
   return fetch(gameUrl(gameId)).then(resp => resp.json());
 }
 
-function createWidget(onHide) {
-  const widget = document.createElement('div');
-  widget.dataset.mtWidget = '';
-  widget.style.display = 'flex';
-  widget.style.flexDirection = 'column';
-  widget.style.minHeight = '10rem';
-  widget.style.padding = '1rem';
+function attachToDom(widget) {
+  const actionBar = document.querySelector('.action-bar');
+  if (actionBar) {
+    actionBar.parentElement.insertBefore(widget, actionBar);
+  } else {
+    throw new Error('Could not find insertion point (.action-bar)');
+  }
+}
 
+function createToolbar() {
   const toolbar = document.createElement('div');
   toolbar.style.display = 'flex';
   toolbar.style.flex = '0 0 2rem';
@@ -71,18 +73,33 @@ function createWidget(onHide) {
       onHide && onHide();
     }
   });
+  return toolbar;
+}
+
+function createWidget() {
+  const widget = document.createElement('div');
+  widget.dataset.mtWidget = '';
+  widget.style.display = 'flex';
+  widget.style.flexDirection = 'column';
+  widget.style.minHeight = '10rem';
+  widget.style.padding = '1rem';
 
   const contentContainer = document.createElement('div');
   contentContainer.style.flex = '1 1 100%';
   contentContainer.dataset.mtContent = '';
   // contentContainer.style.backgroundColor = 'blue';
 
-  widget.appendChild(toolbar);
   widget.appendChild(contentContainer);
 
   return {
     widget,
-    content: contentContainer
+    content: contentContainer,
+    /**
+     * @param {HTMLElement} toolbar
+     */
+    addToolbar(toolbar) {
+      widget.insertBefore(toolbar, contentContainer);
+    }
   };
 }
 
@@ -118,11 +135,13 @@ function renderLoadingSpinner(parent) {
  * @param {HTMLElement} parent
  * @param {Array<MoveTime>} moveTimes
  */
-function renderBars(parent, moveTimes) {
+function renderChart(parent, moveTimes) {
   const chart = document.createElement('div');
   chart.style.display = 'flex';
-  // chart.style.gap = '1px';
-  chart.style.backgroundColor = 'lightgray';
+  // so y axis ticks can be put in place
+  chart.style.position = 'relative';
+  chart.style.gap = '1px';
+  chart.style.backgroundColor = 'darkgray';
   chart.style.minHeight = '100%';
   chart.style.overflowX = 'scroll';
   chart.addEventListener('mouseover', event => {
@@ -132,22 +151,35 @@ function renderBars(parent, moveTimes) {
   });
 
   const maxMillis = Math.max(...moveTimes.map(mt => mt.millis));
+  const maxY = maxMillis * 1.1; // chart is 10% taller than max value
 
+  // y axis ticks
+  for (const tick of [30, 60].map(v => v * 1000)) {
+    const line = document.createElement('div');
+    line.style.borderTop = '1px dashed lightgray';
+    line.style.width = '100%';
+    line.style.height = '0px';
+    line.style.position = 'absolute';
+    line.style.zIndex = '0';
+    line.style.bottom = String(tick / maxY * 100) + '%';
+    chart.appendChild(line);
+  }
+
+  // vertical bars
   moveTimes.forEach(mt => {
     const bar = document.createElement('div');
-    const percent = mt.millis / maxMillis * 100;
+    const percent = mt.millis / maxY * 100;
     bar.style.height = percent + '%';
     bar.style.flex = '1 1 100%';
-    bar.style.backgroundColor = mt.color;
+    bar.style.backgroundColor = mt.color === 'black' ? 'black' : 'white';
 
     // full height wrapper around the bar
     const barWrapper = document.createElement('div');
-    barWrapper.dataset = {
-      mtBarWrapper: '',
-      seconds: Number(mt.millis / 1000).toFixed(1),
-      move: mt.move
-    };
+    barWrapper.dataset.mtBarWrapper = '';
+    barWrapper.dataset.seconds = Number(mt.millis / 1000).toFixed(1),
+    barWrapper.dataset.move = mt.move;
     barWrapper.style.minHeight = '100%';
+    barWrapper.style.position = 'relative';
     barWrapper.style.display = 'flex';
     barWrapper.style.alignItems = 'flex-end';
     barWrapper.style.flex = '1 0 3px';
@@ -160,20 +192,22 @@ function renderBars(parent, moveTimes) {
 }
 
 try {
-  const gameId = determineGameId();
+  const gameId = determineGameId(window.location.toString());
 
-  const { content, widget } = createWidget();
+  const { content, widget, addToolbar } = createWidget();
   renderLoadingSpinner(content);
 
-  getGame(gameId)
-    .then(game => {
-      const moveTimes = extractMoveTimes(game);
-      renderBars(content, moveTimes);
-    })
-    .catch(e => {
-      console.error(e);
-    });
+  const toolbar = createToolbar(() => widget.remove());
+  addToolbar(toolbar);
+
+  attachToDom(widget);
+
+  getGame(gameId).then(game => {
+    const moveTimes = extractMoveTimes(game);
+    renderChart(content, moveTimes);
+  })
+  .catch(e => console.error(e));
 } catch (e) {
   console.error(e);
-  alert(e.message);
+  alert('Error: ' + e.message);
 }
