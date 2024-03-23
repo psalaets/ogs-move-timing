@@ -18,7 +18,8 @@
     "rollup": "^3.21.7"
   },
   "eleventy-bookmarklet": {
-    "type": "lazy-load",
+    "type": "inline",
+    "//type": "lazy-load",
     "url": "https://psalaets.github.io/ogs-move-timing"
   }
 }
