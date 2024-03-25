@@ -166,13 +166,13 @@ function trackCurrentMove(moveNumberContainer, onChange) {
   // invoke for current move number
   notify(moveNumberContainer.textContent);
 
+  // watch for future move number changes
   const observer = new MutationObserver((mutations) => {
     mutations
       .filter(m => m.type === 'characterData')
       .forEach(mutation => notify(mutation.target.data));
   });
 
-  // watch for future move number changes
   observer.observe(moveNumberContainer, {
     characterData: true,
     subtree: true
@@ -192,6 +192,43 @@ function ticks(maxValue, interval) {
   }
 
   return t;
+}
+
+/**
+ * @param {number} millis
+ * @returns {string}
+ */
+function displayTime(millis) {
+  const seconds = millis / 1000;
+  const approxSeconds = millis >= 1000 ? Math.round(seconds) : seconds;
+  return approxSeconds < 60 ? displaySeconds(approxSeconds) : displayMinutesAndSeconds(approxSeconds);
+}
+
+/**
+ * @param {number} seconds
+ * @retrns {string}
+ */
+function displaySeconds(seconds) {
+  const truncated = seconds.toFixed(1);
+  const formatted = truncated.endsWith('.0') ? truncated.slice(0, -2) : truncated;
+  return formatted + 's';
+}
+
+/**
+ * @param {number} seconds
+ * @retrns {string}
+ */
+function displayMinutesAndSeconds(seconds) {
+  const leftoverSeconds = Math.trunc(seconds % 60);
+
+  return [
+    // whole minutes
+    Math.trunc(seconds / 60) + 'm',
+    // seconds of the partial minute, if any
+    leftoverSeconds !== 0 ? leftoverSeconds + 's' : ''
+  ]
+    .filter(p => p)
+    .join(' ');
 }
 
 function markCurrentBar(moveNumber) {
@@ -261,7 +298,7 @@ function renderChart(parent, moveTimes) {
 .mt-bar-wrapper::before {
   display: none;
   position: absolute;
-  content: attr(data-seconds) 's on move ' attr(data-move);
+  content: attr(data-time) ' on move ' attr(data-move);
   top: 0px;
   min-width: 10rem;
   padding: 0.2rem;
@@ -330,7 +367,7 @@ function renderChart(parent, moveTimes) {
     // full height wrapper around the bar
     const barWrapper = document.createElement('div');
     barWrapper.classList.add('mt-bar-wrapper', 'mt-bar-wrapper--' + (mt.move / moveTimes.length < 0.5 ? 'left' : 'right'));
-    barWrapper.dataset.seconds = Number(mt.millis / 1000).toFixed(1);
+    barWrapper.dataset.time = displayTime(mt.millis);
     barWrapper.dataset.move = mt.move;
     barWrapper.appendChild(bar);
 
