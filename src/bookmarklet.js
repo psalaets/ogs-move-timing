@@ -150,30 +150,20 @@ function ticks(maxValue, interval) {
 function renderChart(parent, moveTimes) {
   const chart = document.createElement('div');
   chart.classList.add('mt-chart');
-  chart.style.display = 'flex';
-  // so y axis ticks can be put in place
-  chart.style.position = 'relative';
-  chart.style.backgroundColor = 'darkgray';
-  chart.style.minHeight = '100%';
-  chart.style.overflowX = 'scroll';
-  chart.style.cursor = 'crosshair';
-  chart.style.paddingInline = '1rem';
-
-  chart.addEventListener('mouseover', event => {
-    if (event.target instanceof HTMLElement && event.target.matches('.mt-bar-wrapper')) {
-      console.log('mouseover', event.target);
-    }
-  });
-  chart.addEventListener('mouseout', event => {
-    if (event.target instanceof HTMLElement && event.target.matches('.mt-bar-wrapper')) {
-      console.log('mouseover', event.target);
-    }
-  });
 
   const style = document.createElement('style');
   style.textContent = `
 .mt-chart, .mt-chart * {
   box-sizing: border-box;
+}
+
+.mt-chart {
+  display: flex;
+  position: relative;
+  background-color: darkgray;
+  min-height: 100%;
+  cursor: crosshair;
+  padding-inline: 1rem;
 }
 
 .mt-bar {
