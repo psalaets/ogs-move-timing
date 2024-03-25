@@ -131,6 +131,18 @@ function renderLoadingSpinner(parent) {
   parent.replaceChildren('Loading...');
 }
 
+function ticks(maxValue, interval) {
+  const t = [];
+
+  let current = interval;
+  while (current < maxValue) {
+    t.push(current);
+    current += interval;
+  }
+
+  return t;
+}
+
 /**
  * @param {HTMLElement} parent
  * @param {Array<MoveTime>} moveTimes
@@ -146,7 +158,7 @@ function renderChart(parent, moveTimes) {
   chart.style.overflowX = 'scroll';
   chart.style.cursor = 'crosshair';
   chart.style.paddingInline = '1rem';
-  
+
   chart.addEventListener('mouseover', event => {
     if (event.target instanceof HTMLElement && event.target.matches('.mt-bar-wrapper')) {
       console.log('mouseover', event.target);
@@ -225,7 +237,7 @@ function renderChart(parent, moveTimes) {
   const maxY = maxMillis * 1.1; // chart is 10% taller than max value
 
   // y axis ticks
-  for (const tickMillis of [30, 60].map(v => v * 1000)) {
+  for (const tickMillis of ticks(maxMillis, 30 * 1000)) {
     const tick = document.createElement('div');
     tick.classList.add('mt-yaxis-tick');
     tick.style.bottom = String(tickMillis / maxY * 100) + '%';
