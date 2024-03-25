@@ -127,6 +127,8 @@ function createWidget(toolbar) {
  */
 function extractMoveTimes(game) {
   const blackPlayedFirst = game.gamedata.initial_player === 'black';
+  const oddTurnColor = blackPlayedFirst ? 'black' : 'white';
+  const evenTurnColor = blackPlayedFirst ? 'white' : 'black';
   const isOdd = (n) => n % 2 === 1;
 
   return game.gamedata.moves.map((move, index) => {
@@ -135,7 +137,7 @@ function extractMoveTimes(game) {
     /** @type {MoveTime} */
     const moveTime = {
       move: moveNumber,
-      color: isOdd(moveNumber) && blackPlayedFirst ? 'black' : 'white',
+      color: isOdd(moveNumber) ? oddTurnColor : evenTurnColor,
       millis: move[2]
     };
     return moveTime;
