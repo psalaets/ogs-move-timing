@@ -56,7 +56,7 @@ function determineGameId(url) {
   const gameId = matchResult ? matchResult[1] : null;
 
   if (!gameId) {
-    throw new Error('Chart can only be loaded from OGS games.\n\nIf you\'re in a review, load the chart in game view first then return to the review.');
+    throw new Error('The move timing chart can only be loaded from OGS games.\n\nIf you\'re in a review, load the chart in game view first then return to the review.');
   }
 
   return gameId;
