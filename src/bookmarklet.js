@@ -131,6 +131,40 @@ function renderLoadingSpinner(parent) {
   parent.replaceChildren('Loading...');
 }
 
+/**
+ * @param {(number) => void} onChange
+ */
+function trackCurrentMove(onChange) {
+  const observer = new MutationObserver((mutations) => {
+    mutations
+      .filter(m => m.type === 'characterData')
+      .forEach(mutation => {
+        // Due to i18n not sure what text will be here so just grab any digits and
+        // that's probably the move number.
+        const digits = mutation.target.data
+          .split('')
+          .filter(ch => ch.match(/\d/))
+          .join('');
+
+        if (digits) {
+          const moveNumber = Number(digits);
+          onChange(moveNumber);
+        }
+      });
+  });
+
+  const moveNumberContainer = document.querySelector('.move-number');
+  if (moveNumberContainer) {
+    observer.observe(moveNumberContainer, {
+      characterData: true,
+      subtree: true
+    });
+  }
+
+  return () => observer.disconnect();
+}
+
+// chart helper
 function ticks(maxValue, interval) {
   const t = [];
 
@@ -256,13 +290,18 @@ function renderChart(parent, moveTimes) {
 
 try {
   const gameId = determineGameId(window.location.toString());
-
+  const stopTracking = trackCurrentMove((moveNumber) => console.log(`move ${moveNumber}`));
   const { content, widget, addToolbar } = createWidget();
+
+  const tearDown = () => {
+    widget.remove();
+    stopTracking();
+  };
+
   renderLoadingSpinner(content);
 
-  const toolbar = createToolbar(() => widget.remove());
+  const toolbar = createToolbar(tearDown);
   addToolbar(toolbar);
-
   attachToDom(widget);
 
   getGame(gameId).then(game => {
