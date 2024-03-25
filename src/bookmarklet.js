@@ -340,11 +340,7 @@ function renderChart(parent, moveTimes) {
   parent.replaceChildren(chart);
 }
 
-console.log('running...')
-
 if (!alreadyExists()) {
-  console.log('not already on page, doing more')
-
   try {
     const gameId = determineGameId(window.location.toString());
     const { actionBar, moveNumberContainer } = ogsLandmarks();
