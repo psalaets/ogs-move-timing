@@ -50,13 +50,13 @@ function ogsLandmarks() {
  * @returns {string}
  */
 function determineGameId(url) {
-  const pattern = /https:\/\/online-go\.com\/(game|review)\/(\d+)/;
+  const pattern = /https:\/\/online-go\.com\/game\/(\d+)/;
   const matchResult = pattern.exec(url);
-  // Game id is in 2nd capture group
-  const gameId = matchResult ? matchResult[2] : null;
+  // Game id is in 1st capture group
+  const gameId = matchResult ? matchResult[1] : null;
 
   if (!gameId) {
-    throw new Error('This only works on OGS games and OGS game reviews');
+    throw new Error('Chart can only be loaded from OGS games.\n\nIf you\'re in a review, load the chart in game view first then return to the review.');
   }
 
   return gameId;
@@ -75,7 +75,11 @@ function gameUrl(gameId) {
  * @returns {Promise<Game>}
  */
 function getGame(gameId) {
-  return fetch(gameUrl(gameId)).then(resp => resp.json());
+  return fetch(gameUrl(gameId), {
+    // Prevent OGS API from changing response based on the referer
+    referrerPolicy: 'no-referrer'
+  })
+    .then(resp => resp.json());
 }
 
 /**
