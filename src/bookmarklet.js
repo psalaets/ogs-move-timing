@@ -63,14 +63,13 @@ function attachToDom(widget) {
   }
 }
 
-function createToolbar() {
+function createToolbar(onHide) {
   const toolbar = document.createElement('div');
-  toolbar.style.display = 'flex';
-  toolbar.style.flex = '0 0 2rem';
+  toolbar.style.flex = '0 0 auto';
   toolbar.innerHTML = `<button id="mt-hide">Hide</button>`;
   toolbar.addEventListener('click', event => {
     if (event.target instanceof HTMLButtonElement && event.target.id === 'mt-hide') {
-      onHide && onHide();
+      onHide();
     }
   });
   return toolbar;
@@ -78,16 +77,17 @@ function createToolbar() {
 
 function createWidget() {
   const widget = document.createElement('div');
-  widget.dataset.mtWidget = '';
+  widget.classList.add('mt-widget');
   widget.style.display = 'flex';
   widget.style.flexDirection = 'column';
-  widget.style.minHeight = '10rem';
   widget.style.padding = '1rem';
+  widget.style.gap = '0.5rem';
+  // widget.style.minHeight = '12rem';
+  widget.style.boxSizing = 'border-box';
+  widget.style.flex = '1 0 16rem';
 
   const contentContainer = document.createElement('div');
   contentContainer.style.flex = '1 1 100%';
-  contentContainer.dataset.mtContent = '';
-  // contentContainer.style.backgroundColor = 'blue';
 
   widget.appendChild(contentContainer);
 
@@ -137,52 +137,113 @@ function renderLoadingSpinner(parent) {
  */
 function renderChart(parent, moveTimes) {
   const chart = document.createElement('div');
+  chart.classList.add('mt-chart');
   chart.style.display = 'flex';
   // so y axis ticks can be put in place
   chart.style.position = 'relative';
-  chart.style.gap = '1px';
   chart.style.backgroundColor = 'darkgray';
   chart.style.minHeight = '100%';
   chart.style.overflowX = 'scroll';
+  chart.style.cursor = 'crosshair';
+  chart.style.paddingInline = '1rem';
+  
   chart.addEventListener('mouseover', event => {
-    if (event.target instanceof HTMLElement && event.target.matches('[data-mt-bar-wrapper]')) {
+    if (event.target instanceof HTMLElement && event.target.matches('.mt-bar-wrapper')) {
       console.log('mouseover', event.target);
     }
   });
+  chart.addEventListener('mouseout', event => {
+    if (event.target instanceof HTMLElement && event.target.matches('.mt-bar-wrapper')) {
+      console.log('mouseover', event.target);
+    }
+  });
+
+  const style = document.createElement('style');
+  style.textContent = `
+.mt-chart, .mt-chart * {
+  box-sizing: border-box;
+}
+
+.mt-bar {
+  flex: 1 1 100%;
+  background-color: var(--mt-bar-color);
+}
+
+.mt-bar-wrapper {
+  min-height: 100%;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  flex: 1 0 3px;
+}
+
+.mt-bar-wrapper:hover {
+  background-color: yellow;
+}
+
+.mt-bar-wrapper:hover .mt-bar {
+  background-color: yellow;
+}
+
+.mt-bar-wrapper::before {
+  display: none;
+  position: absolute;
+  content: attr(data-seconds) 's on move ' attr(data-move);
+  top: 0px;
+  min-width: 10rem;
+  padding: 0.2rem;
+  background-color: white;
+  border-radius: 5px;
+  z-index: 1;
+  text-align: center;
+  pointer-events: none;
+}
+
+.mt-bar-wrapper--left::before {
+  left: 0;
+}
+
+.mt-bar-wrapper--right::before {
+  right: 0;
+}
+
+.mt-bar-wrapper:hover::before {
+  display: inline;
+}
+
+.mt-yaxis-tick {
+  border-top: 1px dashed lightgray;
+  left: 1rem;
+  right: 1rem;
+  height: 0;
+  position: absolute;
+  z-index: 0;
+}`;
+  chart.appendChild(style);
 
   const maxMillis = Math.max(...moveTimes.map(mt => mt.millis));
   const maxY = maxMillis * 1.1; // chart is 10% taller than max value
 
   // y axis ticks
-  for (const tick of [30, 60].map(v => v * 1000)) {
-    const line = document.createElement('div');
-    line.style.borderTop = '1px dashed lightgray';
-    line.style.width = '100%';
-    line.style.height = '0px';
-    line.style.position = 'absolute';
-    line.style.zIndex = '0';
-    line.style.bottom = String(tick / maxY * 100) + '%';
-    chart.appendChild(line);
+  for (const tickMillis of [30, 60].map(v => v * 1000)) {
+    const tick = document.createElement('div');
+    tick.classList.add('mt-yaxis-tick');
+    tick.style.bottom = String(tickMillis / maxY * 100) + '%';
+    chart.appendChild(tick);
   }
 
   // vertical bars
   moveTimes.forEach(mt => {
     const bar = document.createElement('div');
-    const percent = mt.millis / maxY * 100;
-    bar.style.height = percent + '%';
-    bar.style.flex = '1 1 100%';
-    bar.style.backgroundColor = mt.color === 'black' ? 'black' : 'white';
+    bar.classList.add('mt-bar');
+    bar.style.height = (mt.millis / maxY * 100) + '%';
+    bar.style.setProperty('--mt-bar-color', mt.color === 'black' ? 'black' : 'white');
 
     // full height wrapper around the bar
     const barWrapper = document.createElement('div');
-    barWrapper.dataset.mtBarWrapper = '';
-    barWrapper.dataset.seconds = Number(mt.millis / 1000).toFixed(1),
+    barWrapper.classList.add('mt-bar-wrapper', 'mt-bar-wrapper--' + (mt.move / moveTimes.length < 0.5 ? 'left' : 'right'));
+    barWrapper.dataset.seconds = Number(mt.millis / 1000).toFixed(1);
     barWrapper.dataset.move = mt.move;
-    barWrapper.style.minHeight = '100%';
-    barWrapper.style.position = 'relative';
-    barWrapper.style.display = 'flex';
-    barWrapper.style.alignItems = 'flex-end';
-    barWrapper.style.flex = '1 0 3px';
     barWrapper.appendChild(bar);
 
     chart.appendChild(barWrapper);
