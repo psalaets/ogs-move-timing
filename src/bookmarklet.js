@@ -135,26 +135,27 @@ function renderLoadingSpinner(parent) {
  * @param {(number) => void} onChange
  */
 function trackCurrentMove(onChange) {
+  // Due to i18n not sure what the exact text will be so just grab digits and
+  // that's probably the move number.
+  const notify = (str) => {
+    const digits = str.split('').filter(ch => ch.match(/\d/)).join('');
+    if (digits) {
+      onChange(Number(digits));
+    }
+  }
+
   const observer = new MutationObserver((mutations) => {
     mutations
       .filter(m => m.type === 'characterData')
-      .forEach(mutation => {
-        // Due to i18n not sure what text will be here so just grab any digits and
-        // that's probably the move number.
-        const digits = mutation.target.data
-          .split('')
-          .filter(ch => ch.match(/\d/))
-          .join('');
-
-        if (digits) {
-          const moveNumber = Number(digits);
-          onChange(moveNumber);
-        }
-      });
+      .forEach(mutation => notify(mutation.target.data));
   });
 
   const moveNumberContainer = document.querySelector('.move-number');
   if (moveNumberContainer) {
+    // invoke for current move number
+    notify(moveNumberContainer.textContent);
+
+    // watch for future move number changes
     observer.observe(moveNumberContainer, {
       characterData: true,
       subtree: true
@@ -328,23 +329,24 @@ function renderChart(parent, moveTimes) {
 
 try {
   const gameId = determineGameId(window.location.toString());
-  const stopTracking = trackCurrentMove((moveNumber) => markCurrentBar(moveNumber));
-  const { content, widget, addToolbar } = createWidget();
+  const tearDowns = [];
+  const cleanUp = () => tearDowns.forEach(fn => fn());
 
-  const tearDown = () => {
-    widget.remove();
-    stopTracking();
-  };
+  const { content, widget, addToolbar } = createWidget();
+  tearDowns.push(() => widget.remove());
 
   renderLoadingSpinner(content);
 
-  const toolbar = createToolbar(tearDown);
+  const toolbar = createToolbar(cleanUp);
   addToolbar(toolbar);
   attachToDom(widget);
 
   getGame(gameId).then(game => {
     const moveTimes = extractMoveTimes(game);
     renderChart(content, moveTimes);
+
+    const stopTracking = trackCurrentMove((moveNumber) => markCurrentBar(moveNumber));
+    tearDowns.push(stopTracking);
   })
   .catch(e => console.error(e));
 } catch (e) {
