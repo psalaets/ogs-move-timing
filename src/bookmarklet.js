@@ -75,6 +75,10 @@ function createToolbar(onHide) {
   return toolbar;
 }
 
+function alreadyExists() {
+  return document.getElementsByClassName('mt-widget').length > 0;
+}
+
 /**
  * @param {HTMLElement} toolbar
  */
@@ -321,26 +325,29 @@ function renderChart(parent, moveTimes) {
   parent.replaceChildren(chart);
 }
 
-try {
-  const gameId = determineGameId(window.location.toString());
-  const tearDowns = [];
-  const cleanUp = () => tearDowns.forEach(fn => fn());
+if (!alreadyExists()) {
+  try {
+    const gameId = determineGameId(window.location.toString());
+    const tearDowns = [];
+    const cleanUp = () => tearDowns.forEach(fn => fn());
 
-  const { content, widget } = createWidget(createToolbar(cleanUp));
-  attachToDom(widget);
-  tearDowns.push(() => widget.remove());
+    const { content, widget } = createWidget(createToolbar(cleanUp));
+    attachToDom(widget);
+    tearDowns.push(() => widget.remove());
 
-  renderLoadingSpinner(content);
-  getGame(gameId)
-    .then(game => {
-      const moveTimes = extractMoveTimes(game);
-      renderChart(content, moveTimes);
+    renderLoadingSpinner(content);
+    getGame(gameId)
+      .then(game => {
+        const moveTimes = extractMoveTimes(game);
+        renderChart(content, moveTimes);
 
-      const stopTracking = trackCurrentMove((moveNumber) => markCurrentBar(moveNumber));
-      tearDowns.push(stopTracking);
-    })
-    .catch(e => console.error(e));
-} catch (e) {
-  console.error(e);
-  alert('Error: ' + e.message);
+        // After chart has rendered, sync highlighted bar with current move
+        const stopTracking = trackCurrentMove((moveNumber) => markCurrentBar(moveNumber));
+        tearDowns.push(stopTracking);
+      })
+      .catch(e => console.error(e));
+  } catch (e) {
+    console.error(e);
+    alert('Error: ' + e.message);
+  }
 }
