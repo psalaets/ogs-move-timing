@@ -22,19 +22,23 @@
 
 /**
  * @typedef {object} Landmarks
+ * @property {HTMLElement} playerCards
  * @property {HTMLElement} actionBar
  * @property {HTMLElement} moveNumberContainer
  *
  * @returns {Landmarks}
  */
 function ogsLandmarks() {
+  const playerCards = document.querySelector('div:has(> .players)');
   const actionBar = document.querySelector('.action-bar');
   const moveNumberContainer = document.querySelector('.move-number');
 
+  if (!playerCards) throw new Error('Unable to find players (div:has(> .players))')
   if (!actionBar) throw new Error('Unable to find action bar (.action-bar)');
   if (!moveNumberContainer) throw new Error('Unable to find move number (.move-number)');
 
   return {
+    playerCards,
     actionBar,
     moveNumberContainer,
   };
@@ -74,15 +78,47 @@ function getGame(gameId) {
   return fetch(gameUrl(gameId)).then(resp => resp.json());
 }
 
-function createToolbar(onHide) {
+/**
+ * @typedef {object} ToolbarCallbacks
+ * @property {() => void} onHide
+ * @property {() => void} onExpand
+ * @property {() => void} onCollapse
+ *
+ * @param {boolean} initialExpanded
+ * @param {ToolbarCallbacks} callbacks
+ * @returns {HTMLElement}
+ */
+function createToolbar(initialExpanded, callbacks) {
+  let expanded = initialExpanded;
+
   const toolbar = document.createElement('div');
+  toolbar.style.display = 'flex';
+  toolbar.style.gap = '0.4rem';
   toolbar.style.flex = '0 0 auto';
-  toolbar.innerHTML = `<button id="mt-hide">Hide</button>`;
-  toolbar.addEventListener('click', event => {
-    if (event.target instanceof HTMLButtonElement && event.target.id === 'mt-hide') {
-      onHide();
+
+  const button = (id, label, onClick) => {
+    const b = document.createElement('button');
+    b.id = id;
+    b.textContent = label;
+    b.addEventListener('click', onClick);
+    return b;
+  };
+
+  const toggleButton = button('mt-toggle', expanded ? 'Collapse' : 'Expand', () => {
+    if (expanded) {
+      callbacks.onCollapse();
+      toggleButton.textContent = 'Expand';
+    } else {
+      callbacks.onExpand();
+      toggleButton.textContent = 'Collapse';
     }
+    expanded = !expanded;
   });
+  const hideButton = button('mt-hide', 'Hide', callbacks.onHide);
+
+  toolbar.appendChild(hideButton);
+  toolbar.appendChild(toggleButton);
+
   return toolbar;
 }
 
@@ -98,10 +134,10 @@ function createWidget(toolbar) {
   widget.classList.add('mt-widget');
   widget.style.display = 'flex';
   widget.style.flexDirection = 'column';
-  widget.style.padding = '1rem';
+  widget.style.paddingBlock = '1rem';
   widget.style.gap = '0.5rem';
   widget.style.boxSizing = 'border-box';
-  widget.style.flex = '1 0 16rem';
+  widget.style.flex = '1 0 12rem';
 
   const contentContainer = document.createElement('div');
   contentContainer.style.flex = '1 1 100%';
@@ -113,10 +149,17 @@ function createWidget(toolbar) {
     widget,
     content: contentContainer,
     /**
-     * @param {HTMLElement} actionBar
+     * @param {'before' | 'after'} where
+     * @param {HTMLElement} referenceElement
      */
-    attachToDom(actionBar) {
-      actionBar.parentElement.insertBefore(widget, actionBar);
+    putWidget(where, referenceElement) {
+      widget.remove();
+
+      if (where === 'before') {
+        referenceElement.parentElement.insertBefore(widget, referenceElement);
+      } else {
+        referenceElement.insertAdjacentElement('afterend', widget);
+      }
     }
   };
 }
@@ -286,7 +329,7 @@ function renderChart(parent, moveTimes) {
   position: relative;
   display: flex;
   align-items: flex-end;
-  flex: 1 0 3px;
+  flex: 1 0 1px;
 }
 
 .mt-bar-wrapper:hover {
@@ -382,13 +425,18 @@ function renderChart(parent, moveTimes) {
 if (!alreadyExists()) {
   try {
     const gameId = determineGameId(window.location.toString());
-    const { actionBar, moveNumberContainer } = ogsLandmarks();
+    const { playerCards, actionBar, moveNumberContainer } = ogsLandmarks();
 
     const tearDowns = [];
     const cleanUp = () => tearDowns.forEach(fn => fn());
 
-    const { content, widget, attachToDom } = createWidget(createToolbar(cleanUp));
-    attachToDom(actionBar);
+    const { content, widget, putWidget } = createWidget(createToolbar(false, {
+      onHide: cleanUp,
+      onExpand: () => putWidget('before', actionBar),
+      onCollapse: () => putWidget('after', playerCards),
+    }));
+    putWidget('after', playerCards);
+
     tearDowns.push(() => widget.remove());
 
     renderLoadingSpinner(content);
