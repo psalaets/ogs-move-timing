@@ -342,8 +342,9 @@ function renderChart(parent, moveTimes) {
 
 if (!alreadyExists()) {
   try {
-    const { actionBar, moveNumberContainer } = ogsLandmarks();
     const gameId = determineGameId(window.location.toString());
+    const { actionBar, moveNumberContainer } = ogsLandmarks();
+
     const tearDowns = [];
     const cleanUp = () => tearDowns.forEach(fn => fn());
 
