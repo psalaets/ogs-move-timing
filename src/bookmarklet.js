@@ -75,31 +75,28 @@ function createToolbar(onHide) {
   return toolbar;
 }
 
-function createWidget() {
+/**
+ * @param {HTMLElement} toolbar
+ */
+function createWidget(toolbar) {
   const widget = document.createElement('div');
   widget.classList.add('mt-widget');
   widget.style.display = 'flex';
   widget.style.flexDirection = 'column';
   widget.style.padding = '1rem';
   widget.style.gap = '0.5rem';
-  // widget.style.minHeight = '12rem';
   widget.style.boxSizing = 'border-box';
   widget.style.flex = '1 0 16rem';
 
   const contentContainer = document.createElement('div');
   contentContainer.style.flex = '1 1 100%';
 
+  widget.appendChild(toolbar);
   widget.appendChild(contentContainer);
 
   return {
     widget,
-    content: contentContainer,
-    /**
-     * @param {HTMLElement} toolbar
-     */
-    addToolbar(toolbar) {
-      widget.insertBefore(toolbar, contentContainer);
-    }
+    content: contentContainer
   };
 }
 
@@ -324,31 +321,25 @@ function renderChart(parent, moveTimes) {
   parent.replaceChildren(chart);
 }
 
-// if hovered bar, highlight hovered bar
-// else, highlight bar of current move
-
 try {
   const gameId = determineGameId(window.location.toString());
   const tearDowns = [];
   const cleanUp = () => tearDowns.forEach(fn => fn());
 
-  const { content, widget, addToolbar } = createWidget();
+  const { content, widget } = createWidget(createToolbar(cleanUp));
+  attachToDom(widget);
   tearDowns.push(() => widget.remove());
 
   renderLoadingSpinner(content);
+  getGame(gameId)
+    .then(game => {
+      const moveTimes = extractMoveTimes(game);
+      renderChart(content, moveTimes);
 
-  const toolbar = createToolbar(cleanUp);
-  addToolbar(toolbar);
-  attachToDom(widget);
-
-  getGame(gameId).then(game => {
-    const moveTimes = extractMoveTimes(game);
-    renderChart(content, moveTimes);
-
-    const stopTracking = trackCurrentMove((moveNumber) => markCurrentBar(moveNumber));
-    tearDowns.push(stopTracking);
-  })
-  .catch(e => console.error(e));
+      const stopTracking = trackCurrentMove((moveNumber) => markCurrentBar(moveNumber));
+      tearDowns.push(stopTracking);
+    })
+    .catch(e => console.error(e));
 } catch (e) {
   console.error(e);
   alert('Error: ' + e.message);
