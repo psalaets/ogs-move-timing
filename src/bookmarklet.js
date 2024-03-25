@@ -177,6 +177,22 @@ function ticks(maxValue, interval) {
   return t;
 }
 
+function markCurrentBar(moveNumber) {
+  const clazz = 'mt-bar-wrapper--current';
+
+  // unmark old current
+  const oldCurrentBar = document.querySelector('.' + clazz);
+  if (oldCurrentBar) {
+    oldCurrentBar.classList.remove(clazz);
+  }
+
+  // unmark new current
+  const newCurrent = document.querySelector(`.mt-bar-wrapper[data-move="${moveNumber}"]`);
+  if (newCurrent) {
+    newCurrent.classList.add(clazz);
+  }
+}
+
 /**
  * @param {HTMLElement} parent
  * @param {Array<MoveTime>} moveTimes
@@ -185,6 +201,7 @@ function renderChart(parent, moveTimes) {
   const chart = document.createElement('div');
   chart.classList.add('mt-chart');
 
+  const chartPadding = '1rem';
   const style = document.createElement('style');
   style.textContent = `
 .mt-chart, .mt-chart * {
@@ -197,7 +214,10 @@ function renderChart(parent, moveTimes) {
   background-color: darkgray;
   min-height: 100%;
   cursor: crosshair;
-  padding-inline: 1rem;
+  padding-inline: ${chartPadding};
+
+  --mt-dark-highlight: #ffd800;
+  --mt-light-highlight: yellow;
 }
 
 .mt-bar {
@@ -214,11 +234,11 @@ function renderChart(parent, moveTimes) {
 }
 
 .mt-bar-wrapper:hover {
-  background-color: yellow;
+  background-color: var(--mt-light-highlight);
 }
 
 .mt-bar-wrapper:hover .mt-bar {
-  background-color: yellow;
+  background-color: var(--mt-dark-highlight);
 }
 
 .mt-bar-wrapper::before {
@@ -235,6 +255,10 @@ function renderChart(parent, moveTimes) {
   pointer-events: none;
 }
 
+.mt-bar-wrapper:hover::before {
+  display: inline;
+}
+
 .mt-bar-wrapper--left::before {
   left: 0;
 }
@@ -243,14 +267,25 @@ function renderChart(parent, moveTimes) {
   right: 0;
 }
 
-.mt-bar-wrapper:hover::before {
-  display: inline;
+/* Only when there's no hovered bar, show current bar and its tooltip */
+.mt-chart:not(:has(.mt-bar-wrapper:hover)) {
+  & .mt-bar-wrapper--current {
+    background-color: var(--mt-light-highlight);
+  }
+
+  & .mt-bar-wrapper--current .mt-bar {
+    background-color: var(--mt-dark-highlight);
+  }
+
+  & .mt-bar-wrapper--current::before {
+    display: inline;
+  }
 }
 
 .mt-yaxis-tick {
   border-top: 1px dashed lightgray;
-  left: 1rem;
-  right: 1rem;
+  left: ${chartPadding};
+  right: ${chartPadding};
   height: 0;
   position: absolute;
   z-index: 0;
@@ -288,9 +323,12 @@ function renderChart(parent, moveTimes) {
   parent.replaceChildren(chart);
 }
 
+// if hovered bar, highlight hovered bar
+// else, highlight bar of current move
+
 try {
   const gameId = determineGameId(window.location.toString());
-  const stopTracking = trackCurrentMove((moveNumber) => console.log(`move ${moveNumber}`));
+  const stopTracking = trackCurrentMove((moveNumber) => markCurrentBar(moveNumber));
   const { content, widget, addToolbar } = createWidget();
 
   const tearDown = () => {
