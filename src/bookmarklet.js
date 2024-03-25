@@ -21,6 +21,26 @@
  */
 
 /**
+ * @typedef {object} Landmarks
+ * @property {HTMLElement} actionBar
+ * @property {HTMLElement} moveNumberContainer
+ *
+ * @returns {Landmarks}
+ */
+function ogsLandmarks() {
+  const actionBar = document.querySelector('.action-bar');
+  const moveNumberContainer = document.querySelector('.move-number');
+
+  if (!actionBar) throw new Error('Unable to find action bar (.action-bar)');
+  if (!moveNumberContainer) throw new Error('Unable to find move number (.move-number)');
+
+  return {
+    actionBar,
+    moveNumberContainer,
+  };
+}
+
+/**
  * Figure out game id from a url.
  *
  * @returns {string}
@@ -52,15 +72,6 @@ function gameUrl(gameId) {
  */
 function getGame(gameId) {
   return fetch(gameUrl(gameId)).then(resp => resp.json());
-}
-
-function attachToDom(widget) {
-  const actionBar = document.querySelector('.action-bar');
-  if (actionBar) {
-    actionBar.parentElement.insertBefore(widget, actionBar);
-  } else {
-    throw new Error('Could not find insertion point (.action-bar)');
-  }
 }
 
 function createToolbar(onHide) {
@@ -100,7 +111,13 @@ function createWidget(toolbar) {
 
   return {
     widget,
-    content: contentContainer
+    content: contentContainer,
+    /**
+     * @param {HTMLElement} actionBar
+     */
+    attachToDom(actionBar) {
+      actionBar.parentElement.insertBefore(widget, actionBar);
+    }
   };
 }
 
@@ -133,9 +150,10 @@ function renderLoadingSpinner(parent) {
 }
 
 /**
+ * @param {HTMLElement} moveNumberContainer
  * @param {(number) => void} onChange
  */
-function trackCurrentMove(onChange) {
+function trackCurrentMove(moveNumberContainer, onChange) {
   // Due to i18n not sure what the exact text will be so just grab digits and
   // that's probably the move number.
   const notify = (str) => {
@@ -145,23 +163,20 @@ function trackCurrentMove(onChange) {
     }
   }
 
+  // invoke for current move number
+  notify(moveNumberContainer.textContent);
+
   const observer = new MutationObserver((mutations) => {
     mutations
       .filter(m => m.type === 'characterData')
       .forEach(mutation => notify(mutation.target.data));
   });
 
-  const moveNumberContainer = document.querySelector('.move-number');
-  if (moveNumberContainer) {
-    // invoke for current move number
-    notify(moveNumberContainer.textContent);
-
-    // watch for future move number changes
-    observer.observe(moveNumberContainer, {
-      characterData: true,
-      subtree: true
-    });
-  }
+  // watch for future move number changes
+  observer.observe(moveNumberContainer, {
+    characterData: true,
+    subtree: true
+  });
 
   return () => observer.disconnect();
 }
@@ -188,7 +203,7 @@ function markCurrentBar(moveNumber) {
     oldCurrentBar.classList.remove(clazz);
   }
 
-  // unmark new current
+  // mark new current
   const newCurrent = document.querySelector(`.mt-bar-wrapper[data-move="${moveNumber}"]`);
   if (newCurrent) {
     newCurrent.classList.add(clazz);
@@ -327,12 +342,13 @@ function renderChart(parent, moveTimes) {
 
 if (!alreadyExists()) {
   try {
+    const { actionBar, moveNumberContainer } = ogsLandmarks();
     const gameId = determineGameId(window.location.toString());
     const tearDowns = [];
     const cleanUp = () => tearDowns.forEach(fn => fn());
 
-    const { content, widget } = createWidget(createToolbar(cleanUp));
-    attachToDom(widget);
+    const { content, widget, attachToDom } = createWidget(createToolbar(cleanUp));
+    attachToDom(actionBar);
     tearDowns.push(() => widget.remove());
 
     renderLoadingSpinner(content);
@@ -342,7 +358,7 @@ if (!alreadyExists()) {
         renderChart(content, moveTimes);
 
         // After chart has rendered, sync highlighted bar with current move
-        const stopTracking = trackCurrentMove((moveNumber) => markCurrentBar(moveNumber));
+        const stopTracking = trackCurrentMove(moveNumberContainer, (moveNumber) => markCurrentBar(moveNumber));
         tearDowns.push(stopTracking);
       })
       .catch(e => console.error(e));
