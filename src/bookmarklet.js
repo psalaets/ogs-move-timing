@@ -319,7 +319,7 @@ function renderChart(parent, moveTimes) {
   cursor: crosshair;
   padding-inline: ${chartPadding};
 
-  --mt-dark-highlight: rgba(255, 242, 0, 0.5);
+  --mt-dark-highlight: #ffd800;
   --mt-light-highlight: yellow;
 }
 
