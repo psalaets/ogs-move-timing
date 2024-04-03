@@ -75,10 +75,7 @@ function gameUrl(gameId) {
  * @returns {Promise<Game>}
  */
 function getGame(gameId) {
-  return fetch(gameUrl(gameId), {
-    // Prevent OGS API from changing response based on the referer
-    referrerPolicy: 'no-referrer'
-  })
+  return fetch(gameUrl(gameId))
     .then(resp => resp.json());
 }
 
