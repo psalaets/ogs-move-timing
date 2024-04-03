@@ -64,11 +64,15 @@ export function createChart(moveTimes) {
 }
 
 .mt-bar-wrapper--left::before {
-  left: 0;
+  left: 100%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .mt-bar-wrapper--right::before {
-  right: 0;
+  right: 100%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 /* Only when there's no hovered bar, show current bar and its tooltip */
