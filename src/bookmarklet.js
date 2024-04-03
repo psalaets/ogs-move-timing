@@ -5,28 +5,6 @@ import { createToolbar } from './ui/toolbar.js';
 import { putElement } from './ui/put-element.js';
 import { trackCurrentMove } from './track-current-move.js';
 
-/**
- * @typedef {number} MoveCol Zero-based index of the column, starting from the left
- * @typedef {number} MoveRow Zero-based index of the row, starting from the top
- * @typedef {number} MoveMillis Milliseconds elapsed between previous move and this move
- * @typedef {[MoveCol, MoveRow, MoveMillis]} Move A stone played on the board
- *
- * @typedef {'white' | 'black'} PlayerColor
- *
- * @typedef {Object} Gamedata
- * @property {Array<Move>} moves
- * @property {PlayerColor} initial_player
- *
- *
- * @typedef {Object} Game Just the game data needed for this bookmarklet, not exhaustive.
- * @property {Gamedata} gamedata
- *
- * @typedef {Object} MoveTime
- * @property {number} move
- * @property {number} millis
- * @property {PlayerColor} color
- */
-
 if (!alreadyExists()) {
   try {
     const gameId = determineGameId(window.location.toString());

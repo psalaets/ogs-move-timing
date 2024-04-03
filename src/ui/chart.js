@@ -1,5 +1,5 @@
 /**
- * @param {Array<MoveTime>} moveTimes
+ * @param {Array<import('../ogs.js').MoveTime>} moveTimes
  */
 export function createChart(moveTimes) {
   const chart = document.createElement('div');
@@ -97,7 +97,7 @@ export function createChart(moveTimes) {
   chart.appendChild(style);
 
   const maxMillis = Math.max(...moveTimes.map(mt => mt.millis));
-  const maxY = maxMillis * 1.1; // chart is 10% taller than max value
+  const maxY = maxMillis * 1.1; // chart y axis limit is 10% more than max value
 
   // y axis ticks
   for (const tickMillis of ticks(maxMillis, 30 * 1000)) {
