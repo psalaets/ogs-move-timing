@@ -29,4 +29,4 @@ Notable changes will be listed here.
 
 ## Source code
 
-https://github.com/psalaets/ogs-move-timing
+[https://github.com/psalaets/ogs-move-timing](https://github.com/psalaets/ogs-move-timing)
