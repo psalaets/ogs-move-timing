@@ -24,10 +24,6 @@ Drag this link to your browser's bookmarks bar: <a href="javascript:void {{code}
 
 Notable changes will be listed here.
 
-### April 3, 2024
-
-- User can click a bar in the timing chart to change the board start to that move.
-
 ### March 25, 2024
 
 - Timing chart now appears in sidebar by default, with "Expand" button to pop it out under the goban.
