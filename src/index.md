@@ -23,6 +23,10 @@ Drag this link to your browser's bookmarks bar: <a href="javascript:void {{code}
 
 Notable changes will be listed here.
 
+### April 15, 2024
+
+- Small fix to handle new OGS game url pattern.
+
 ### March 25, 2024
 
 - Timing chart now appears in sidebar by default, with "Expand" button to pop it out under the goban.
