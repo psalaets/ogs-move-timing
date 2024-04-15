@@ -50,10 +50,10 @@ export function ogsLandmarks() {
  * @returns {string}
  */
 export function determineGameId(url) {
-  const pattern = /https:\/\/online-go\.com\/game\/view\/(\d+)/;
+  const pattern = /https:\/\/online-go\.com\/game\/(view\/)?(\d+)/;
   const matchResult = pattern.exec(url);
-  // Game id is in 1st capture group
-  const gameId = matchResult ? matchResult[1] : null;
+  // Game id is in 2nd capture group
+  const gameId = matchResult ? matchResult[2] : null;
 
   if (!gameId) {
     throw new Error('The move timing chart can only be loaded from OGS games.\n\nIf you\'re in a review, load the chart in game view first then return to the review.');
