@@ -5,6 +5,12 @@ import { createToolbar } from './ui/toolbar.js';
 import { putElement } from './ui/put-element.js';
 import { trackCurrentMove } from './track-current-move.js';
 
+/** Name of global clean up function */
+const globalCleanUp = 'ogsMoveTimingCleanUp';
+
+/** Clean up anything from previous invocation */
+typeof window[globalCleanUp] === 'function' && window[globalCleanUp]();
+
 if (!alreadyExists()) {
   try {
     const gameId = determineGameId(window.location.toString());
@@ -17,6 +23,10 @@ if (!alreadyExists()) {
      */
     const tearDowns = [];
     const cleanUp = () => tearDowns.forEach(fn => fn());
+
+    // Global clean up for when bookmarklet has been run more than once
+    window[globalCleanUp] = cleanUp;
+    tearDowns.push(() => delete window[globalCleanUp]);
 
     // Create toolbar and widget
     const initialExpanded = false;
@@ -45,12 +55,17 @@ if (!alreadyExists()) {
       .then(game => {
         // Create and render chart
         const moveTimes = extractMoveTimes(game);
-        const { chart, markCurrentBar } = createChart(moveTimes);
-        content.replaceChildren(chart);
 
-        // Sync highlighted bar with current move
-        const stopTracking = trackCurrentMove(moveNumberContainer, (moveNumber) => markCurrentBar(moveNumber));
-        tearDowns.push(stopTracking);
+        if (moveTimes.length > 0) {
+          const { chart, markCurrentBar } = createChart(moveTimes);
+          content.replaceChildren(chart);
+
+          // Sync highlighted bar with current move
+          const stopTracking = trackCurrentMove(moveNumberContainer, (moveNumber) => markCurrentBar(moveNumber));
+          tearDowns.push(stopTracking);
+        } else {
+          content.replaceChildren('No moves received from server');
+        }
       })
       .catch(e => console.error(e));
   } catch (e) {
