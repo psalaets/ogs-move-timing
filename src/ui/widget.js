@@ -1,9 +1,5 @@
 const className = 'mt-widget';
 
-export function alreadyExists() {
-  return document.getElementsByClassName(className).length > 0;
-}
-
 /**
  * @param {HTMLElement} toolbar
  */
