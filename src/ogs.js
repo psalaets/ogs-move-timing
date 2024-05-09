@@ -37,10 +37,15 @@
  */
 
 /**
+ * @typedef {'main' | 'overtime'} ClockPhase
+ */
+
+/**
  * @typedef {Object} MoveTime
- * @property {number} move
- * @property {number} millis
- * @property {PlayerColor} color
+ * @property {number} move Move number
+ * @property {number} millis How long spent thinking before the move
+ * @property {PlayerColor} color Who played the move
+ * @property {ClockPhase} clockPhase
  */
 
 /**
@@ -114,24 +119,40 @@ export function extractMoveTimes(game) {
   const evenTurnColor = blackPlayedFirst ? 'white' : 'black';
   const isOdd = (n) => n % 2 === 1;
 
+  // For tracking what clock phase a move is in
+  const hasMainTime = mainTimeSeconds(game) !== null;
+  const mainTimeRemaining = {
+    black: hasMainTime ? mainTimeSeconds(game) * 1000 : Infinity,
+    white: hasMainTime ? mainTimeSeconds(game) * 1000 : Infinity,
+  };
+
   return game.gamedata.moves.map((move, index) => {
     const moveNumber = index + 1;
+    const playerColor = isOdd(moveNumber) ? oddTurnColor : evenTurnColor;
+    const millis = move[2];
 
     /** @type {MoveTime} */
     const moveTime = {
       move: moveNumber,
-      color: isOdd(moveNumber) ? oddTurnColor : evenTurnColor,
-      millis: move[2]
+      color: playerColor,
+      millis: millis,
+      clockPhase: mainTimeRemaining[playerColor] > 0 ? 'main' : 'overtime',
     };
+
+    // First move doesn't consume main time
+    if (moveNumber > 1) {
+      mainTimeRemaining[playerColor] -= millis;
+    }
+
     return moveTime;
   });
 }
 
 /**
  * @param {Game} game
- * @returns {number | null}
+ * @returns {number | null} Number of seconds of main time, if any
  */
-export function mainTime(game) {
+export function mainTimeSeconds(game) {
   const timeControl = game.gamedata.time_control;
   return timeControl.main_time != null ? timeControl.main_time : null;
 }
