@@ -3,17 +3,40 @@
  * @typedef {number} MoveRow Zero-based index of the row, starting from the top
  * @typedef {number} MoveMillis Milliseconds elapsed between previous move and this move
  * @typedef {[MoveCol, MoveRow, MoveMillis]} Move A stone played on the board
- *
+ */
+
+/**
  * @typedef {'white' | 'black'} PlayerColor
+ */
+
+/**
+ * @typedef {Object} ByoyomiTimeControl
+ * @property {'byoyomi'} system
+ * @property {number} main_time
  *
+ * @typedef {Object} CanadianTimeControl
+ * @property {'canadian'} system
+ * @property {number} main_time
+ *
+ * @typedef {Object} OtherTimeControl
+ * @property {string} system
+ *
+ * @typedef {ByoyomiTimeControl | CanadianTimeControl | OtherTimeControl} TimeControl
+ */
+
+/**
  * @typedef {Object} Gamedata
  * @property {Array<Move>} moves
  * @property {PlayerColor} initial_player
- *
- *
+ * @property {TimeControl} time_control
+ */
+
+/**
  * @typedef {Object} Game Just the game data needed for this bookmarklet, not exhaustive.
  * @property {Gamedata} gamedata
- *
+ */
+
+/**
  * @typedef {Object} MoveTime
  * @property {number} move
  * @property {number} millis
@@ -102,4 +125,13 @@ export function extractMoveTimes(game) {
     };
     return moveTime;
   });
+}
+
+/**
+ * @param {Game} game
+ * @returns {number | null}
+ */
+export function mainTime(game) {
+  const timeControl = game.gamedata.time_control;
+  return timeControl.main_time != null ? timeControl.main_time : null;
 }

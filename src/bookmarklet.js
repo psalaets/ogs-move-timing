@@ -4,6 +4,7 @@ import { createWidget } from './ui/widget.js';
 import { createToolbar } from './ui/toolbar.js';
 import { putElement } from './ui/put-element.js';
 import { trackCurrentMove } from './track-current-move.js';
+import { createStats } from './ui/stats.js';
 
 /** Name of global clean up function */
 const globalCleanUp = 'ogsMoveTimingCleanUp';
@@ -29,17 +30,15 @@ try {
 
   // Create toolbar and widget
   const initialExpanded = false;
-  const { toolbar, setToolbarActions } = createToolbar(initialExpanded);
-  const { content, widget, tearDownWidget } = createWidget(toolbar);
+  const { toolbar, actions } = createToolbar(initialExpanded);
+  const { setContent, widget, tearDownWidget } = createWidget(toolbar);
   tearDowns.push(tearDownWidget);
 
   const showBig = () => putElement(widget, 'before', actionBar);
   const showSmall = () => putElement(widget, 'after', playerCards);
-  setToolbarActions({
-    onHide: cleanUp,
-    onExpand: showBig,
-    onCollapse: showSmall,
-  });
+  actions.collapse = showSmall;
+  actions.expand = showBig;
+  actions.hide = cleanUp;
 
   // Render widget
   if (!initialExpanded) {
@@ -49,21 +48,36 @@ try {
   }
 
   // Load game data
-  content.replaceChildren('Loading...');
+  setContent('Loading...');
   getGame(gameId)
     .then(game => {
-      // Create and render chart
       const moveTimes = extractMoveTimes(game);
 
       if (moveTimes.length > 0) {
-        const { chart, markCurrentBar } = createChart(moveTimes);
-        content.replaceChildren(chart);
+        // Render chart
+        actions.chart = () => {
+          setContent(container => {
+            const { chart, markCurrentBar } = createChart(moveTimes);
 
-        // Sync highlighted bar with current move
-        const stopTracking = trackCurrentMove(moveNumberContainer, (moveNumber) => markCurrentBar(moveNumber));
-        tearDowns.push(stopTracking);
+            container.replaceChildren(chart);
+
+            // Sync highlighted bar with current move
+            return trackCurrentMove(moveNumberContainer, (moveNumber) => markCurrentBar(moveNumber));
+          });
+        };
+
+        actions.stats = () => {
+          // Render stats block
+          setContent(container => {
+            const { stats } = createStats(moveTimes);
+            container.replaceChildren(stats);
+          });
+        };
+
+        // Show chart by default
+        actions.chart();
       } else {
-        content.replaceChildren('No moves received from server');
+        setContent('No moves received from server');
       }
     })
     .catch(e => console.error(e));

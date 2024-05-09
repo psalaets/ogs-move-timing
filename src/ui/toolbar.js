@@ -27,23 +27,36 @@ export function createToolbar(initialExpanded) {
   const toggleButton = button('mt-toggle', expanded ? 'Collapse' : 'Expand');
   toolbar.appendChild(toggleButton);
 
+  const chartButton = button('mt-chart', 'Chart');
+  toolbar.appendChild(chartButton);
+
+  const statsButton = button('mt-stats', 'Stats');
+  toolbar.appendChild(statsButton);
+
+  const actions = {
+    hide: () => {},
+    expand: () => {},
+    collapse: () => {},
+    chart: () => {},
+    stats: () => {},
+  };
+
+  hideButton.addEventListener('click', () => actions.hide());
+  toggleButton.addEventListener('click', () => {
+    if (expanded) {
+      actions.collapse();
+      toggleButton.textContent = 'Expand';
+    } else {
+      actions.expand();
+      toggleButton.textContent = 'Collapse';
+    }
+    expanded = !expanded;
+  });
+  chartButton.addEventListener('click', () => actions.chart());
+  statsButton.addEventListener('click', () => actions.stats());
+
   return {
     toolbar,
-    /**
-     * @param {ToolbarActions} actions
-     */
-    setToolbarActions(actions) {
-      hideButton.addEventListener('click', actions.onHide);
-      toggleButton.addEventListener('click', () => {
-        if (expanded) {
-          actions.onCollapse();
-          toggleButton.textContent = 'Expand';
-        } else {
-          actions.onExpand();
-          toggleButton.textContent = 'Collapse';
-        }
-        expanded = !expanded;
-      });
-    }
+    actions,
   };
 }
