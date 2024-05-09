@@ -1,9 +1,4 @@
 /**
- * @typedef {object} ToolbarActions
- * @property {() => void} onHide
- * @property {() => void} onExpand
- * @property {() => void} onCollapse
- *
  * @param {boolean} initialExpanded
  */
 export function createToolbar(initialExpanded) {
@@ -14,25 +9,25 @@ export function createToolbar(initialExpanded) {
   toolbar.style.gap = '0.4rem';
   toolbar.style.flex = '0 0 auto';
 
-  const button = (id, label) => {
+  const button = (label) => {
     const b = document.createElement('button');
-    b.id = id;
     b.textContent = label;
     return b;
   };
 
-  const hideButton = button('mt-hide', 'Hide');
+  const hideButton = button('Hide');
   toolbar.appendChild(hideButton);
 
-  const toggleButton = button('mt-toggle', expanded ? 'Collapse' : 'Expand');
+  const toggleButton = button(expanded ? 'Collapse' : 'Expand');
   toolbar.appendChild(toggleButton);
 
-  const chartButton = button('mt-chart', 'Chart');
+  const chartButton = button('Chart');
   toolbar.appendChild(chartButton);
 
-  const statsButton = button('mt-stats', 'Stats');
+  const statsButton = button('Stats');
   toolbar.appendChild(statsButton);
 
+  // Holder for the actions, all default to no-op
   const actions = {
     hide: () => {},
     expand: () => {},
@@ -41,6 +36,7 @@ export function createToolbar(initialExpanded) {
     stats: () => {},
   };
 
+  // Wire actions to buttons
   hideButton.addEventListener('click', () => actions.hide());
   toggleButton.addEventListener('click', () => {
     if (expanded) {
