@@ -23,6 +23,10 @@ Drag this link to your browser's bookmarks bar: <a href="javascript:void {{code}
 
 Notable changes will be listed here.
 
+### May 10, 2024
+
+- Added basic time-per-move stats.
+
 ### April 15, 2024
 
 - Small fix to handle new OGS game url pattern.
