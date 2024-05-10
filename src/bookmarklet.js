@@ -54,11 +54,10 @@ try {
       const moveTimes = extractMoveTimes(game);
 
       if (moveTimes.length > 0) {
-        // Render chart
+        // For rendering chart
         actions.chart = () => {
           setContent(container => {
             const { chart, markCurrentBar } = createChart(moveTimes);
-
             container.replaceChildren(chart);
 
             // Sync highlighted bar with current move
@@ -66,8 +65,8 @@ try {
           });
         };
 
+        // For rendering stats block
         actions.stats = () => {
-          // Render stats block
           setContent(container => {
             const { stats } = createStats(moveTimes);
             container.replaceChildren(stats);
