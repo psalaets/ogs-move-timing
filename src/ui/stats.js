@@ -61,17 +61,17 @@ export function createStats(moveTimes) {
  */
 function playerRow(moveTimes, color) {
   const allMoves = moveTimes.filter(mt => mt.color === color);
-  const mainMain = allMoves.filter(mt => mt.clockPhase === 'main');
+  const mainMoves = allMoves.filter(mt => mt.clockPhase === 'main');
   const overtimeMoves = allMoves.filter(mt => mt.clockPhase === 'overtime');
 
-  const mainTime = mainMain.length > 0 ? displayTime(median(mainMain.map(m => m.millis).sort(ascending))) : '-';
-  const overtime = overtimeMoves.length > 0 ? displayTime(median(overtimeMoves.map(m => m.millis).sort(ascending))) : '-';
+  const timePerMove = {
+    main: mainMoves.length > 0 ? displayTime(median(mainMoves.map(m => m.millis).sort(ascending))) : '-',
+    overtime: overtimeMoves.length > 0 ? displayTime(median(overtimeMoves.map(m => m.millis).sort(ascending))) : '-'
+  };
 
-  return `
-    <tr>
-      <th>${color}</th>
-      <td>${mainTime}</td>
-      <td>${overtime}</td>
-    </tr>
-`;
+  return `<tr>
+  <th>${color}</th>
+  <td>${timePerMove.main}</td>
+  <td>${timePerMove.overtime}</td>
+</tr>`;
 }
