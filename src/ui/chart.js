@@ -1,9 +1,15 @@
 import { displayTime } from './format.js';
 
 /**
- * @param {Array<import('../ogs.js').MoveTime>} moveTimes
+ * @typedef {object} ChartOptions
+ * @property {number} yTickSeconds The interval, in seconds, at which to draw y axis ticks
  */
-export function createChart(moveTimes) {
+
+/**
+ * @param {Array<import('../ogs.js').MoveTime>} moveTimes
+ * @param {ChartOptions} options
+ */
+export function createChart(moveTimes, options) {
   const chart = document.createElement('div');
   chart.classList.add('mt-chart');
 
@@ -106,7 +112,7 @@ export function createChart(moveTimes) {
   const maxY = maxMillis * 1.1; // chart y axis limit is 10% more than max value
 
   // y axis ticks
-  for (const tickMillis of ticks(maxMillis, 30 * 1000)) {
+  for (const tickMillis of ticks(maxMillis, options.yTickSeconds * 1000)) {
     const tick = document.createElement('div');
     tick.classList.add('mt-yaxis-tick');
     tick.style.bottom = String(tickMillis / maxY * 100) + '%';

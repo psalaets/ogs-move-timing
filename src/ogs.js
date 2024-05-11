@@ -13,6 +13,7 @@
  * @typedef {Object} ByoyomiTimeControl
  * @property {'byoyomi'} system
  * @property {number} main_time
+ * @property {number} period_time
  *
  * @typedef {Object} CanadianTimeControl
  * @property {'canadian'} system
@@ -153,6 +154,21 @@ export function extractMoveTimes(game) {
  * @returns {number | null} Number of seconds of main time, if any
  */
 export function mainTimeSeconds(game) {
-  const timeControl = game.gamedata.time_control;
-  return timeControl.main_time != null ? timeControl.main_time : null;
+  return timeControl(game).main_time != null ? timeControl(game).main_time : null;
+}
+
+/**
+ * @param {Game} game
+ * @returns {number | null} Number of seconds of byoyomi period time, if any
+ */
+export function byoyomiPeriodTime(game) {
+  return timeControl(game).system === 'byoyomi' ? timeControl(game).period_time : null;
+}
+
+/**
+ * @param {Game} game
+ * @return {TimeControl} Time control used in the game
+ */
+function timeControl(game) {
+  return game.gamedata.time_control;
 }

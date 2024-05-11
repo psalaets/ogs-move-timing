@@ -1,4 +1,4 @@
-import { ogsLandmarks, determineGameId, getGame, extractMoveTimes, gameUrl } from './ogs.js';
+import { ogsLandmarks, determineGameId, getGame, extractMoveTimes, gameUrl, byoyomiPeriodTime } from './ogs.js';
 import { createChart } from './ui/chart.js';
 import { createWidget } from './ui/widget.js';
 import { createToolbar } from './ui/toolbar.js';
@@ -57,7 +57,9 @@ try {
         // For rendering chart
         actions.chart = () => {
           setContent(container => {
-            const { chart, markCurrentBar } = createChart(moveTimes);
+            const { chart, markCurrentBar } = createChart(moveTimes, {
+              yTickSeconds: byoyomiPeriodTime(game) || 30
+            });
             container.replaceChildren(chart);
 
             // Sync highlighted bar with current move

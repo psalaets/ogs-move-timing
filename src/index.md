@@ -26,6 +26,7 @@ Notable changes will be listed here.
 ### May 10, 2024
 
 - Added basic time-per-move stats.
+- Y axis ticks are based on byoyomi period time if time system is byo-yomi. Otherwise ticks default to every 30 seconds.
 
 ### April 15, 2024
 
