@@ -29,23 +29,16 @@ try {
   tearDowns.push(() => delete window[globalCleanUp]);
 
   // Create toolbar and widget
-  const initialExpanded = false;
-  const { toolbar, actions } = createToolbar(initialExpanded);
+  const { toolbar, actions } = createToolbar();
   const { setContent, widget, tearDownWidget } = createWidget(toolbar);
   tearDowns.push(tearDownWidget);
 
-  const showBig = () => putElement(widget, 'before', actionBar);
   const showSmall = () => putElement(widget, 'after', playerCards);
   actions.collapse = showSmall;
-  actions.expand = showBig;
   actions.hide = cleanUp;
 
   // Render widget
-  if (!initialExpanded) {
-    showSmall();
-  } else {
-    showBig();
-  }
+  showSmall();
 
   // Load game data
   setContent('Loading...');

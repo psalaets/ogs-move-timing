@@ -52,23 +52,19 @@
 /**
  * @typedef {object} Landmarks
  * @property {HTMLElement} playerCards
- * @property {HTMLElement} actionBar
  * @property {HTMLElement} moveNumberContainer
  *
  * @returns {Landmarks}
  */
 export function ogsLandmarks() {
   const playerCards = document.querySelector('div:has(> .players)');
-  const actionBar = document.querySelector('.action-bar');
   const moveNumberContainer = document.querySelector('.move-number');
 
   if (!playerCards) throw new Error('Unable to find players: div:has(> .players)')
-  if (!actionBar) throw new Error('Unable to find action bar: .action-bar');
   if (!moveNumberContainer) throw new Error('Unable to find move number: .move-number');
 
   return {
     playerCards,
-    actionBar,
     moveNumberContainer,
   };
 }
