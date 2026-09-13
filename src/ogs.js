@@ -58,7 +58,7 @@
  */
 export function ogsLandmarks() {
   const playerCards = document.querySelector('div:has(> .players)');
-  const moveNumberContainer = document.querySelector('.move-number');
+  const moveNumberContainer = document.querySelector('.MoveNumberControl-move-number');
 
   if (!playerCards) throw new Error('Unable to find players: div:has(> .players)')
   if (!moveNumberContainer) throw new Error('Unable to find move number: .move-number');
