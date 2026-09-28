@@ -29,7 +29,7 @@ try {
   tearDowns.push(() => delete window[globalCleanUp]);
 
   // Create toolbar and widget
-  const { toolbar, actions } = createToolbar();
+  const { toolbar, actions, updateSortButton } = createToolbar();
   const { setContent, widget, tearDownWidget } = createWidget(toolbar);
   tearDowns.push(tearDownWidget);
 
@@ -47,11 +47,15 @@ try {
       const moveTimes = extractMoveTimes(game);
 
       if (moveTimes.length > 0) {
+        let sorted = false;
+
         // For rendering chart
         actions.chart = () => {
+          updateSortButton(true, sorted);
           setContent(container => {
             const { chart, markCurrentBar } = createChart(moveTimes, {
-              yTickSeconds: byoyomiPeriodTime(game) || 30
+              yTickSeconds: byoyomiPeriodTime(game) || 30,
+              sorted
             });
             container.replaceChildren(chart);
 
@@ -60,8 +64,15 @@ try {
           });
         };
 
+        // Toggle chart between move order and sorted by time
+        actions.sort = () => {
+          sorted = !sorted;
+          actions.chart();
+        };
+
         // For rendering stats block
         actions.stats = () => {
+          updateSortButton(false, sorted);
           setContent(container => {
             const { stats } = createStats(moveTimes);
             container.replaceChildren(stats);
