@@ -23,6 +23,10 @@ function displaySeconds(seconds) {
  * @retrns {string}
  */
 function displayMinutesAndSeconds(seconds) {
+  if (seconds >= 3600) {
+    return displayHoursAndMinutes(seconds);
+  }
+
   const leftoverSeconds = Math.trunc(seconds % 60);
 
   return [
@@ -30,6 +34,23 @@ function displayMinutesAndSeconds(seconds) {
     Math.trunc(seconds / 60) + 'm',
     // seconds of the partial minute, if any
     leftoverSeconds !== 0 ? leftoverSeconds + 's' : ''
+  ]
+    .filter(p => p)
+    .join(' ');
+}
+
+/**
+ * @param {number} seconds
+ * @returns {string}
+ */
+function displayHoursAndMinutes(seconds) {
+  const leftoverMinutes = Math.trunc((seconds % 3600) / 60);
+
+  return [
+    // whole hours
+    Math.trunc(seconds / 3600) + 'h',
+    // minutes of the partial hour, if any
+    leftoverMinutes !== 0 ? leftoverMinutes + 'm' : ''
   ]
     .filter(p => p)
     .join(' ');
